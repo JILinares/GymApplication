@@ -5,12 +5,14 @@ public class Class {
 	private String name;
 	private String description;
 	private int capacity;
+	private int enrollment;
 	private int[] members;
 
-	public Class(String name, String description, int capacity, int[] members) {
+	public Class(String name, String description, int capacity, int enrollment, int[] members) {
 		this.name = name;
 		this.description = description;
 		this.capacity = capacity;
+		this.enrollment = enrollment;
 		this.members = members;
 	}
 
@@ -36,6 +38,14 @@ public class Class {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public int getEnrollment() {
+		return enrollment;
+	}
+
+	public void setEnrollment(int enrollment) {
+		this.enrollment = enrollment;
 	}
 
 	public int[] getMembers() {

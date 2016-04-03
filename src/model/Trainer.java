@@ -6,13 +6,16 @@ public class Trainer {
 	private String lName;
 	private int id;
 	private int capacity;
+	private int enrollment;
 	private int[] members;
-	
-	public Trainer(String fName, String lName, int id, int capacity, int[] members) {
+
+	public Trainer(String fName, String lName, int id, int capacity, int enrollment, int[] members) {
+		super();
 		this.fName = fName;
 		this.lName = lName;
 		this.id = id;
 		this.capacity = capacity;
+		this.enrollment = enrollment;
 		this.members = members;
 	}
 
@@ -46,6 +49,14 @@ public class Trainer {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public int getEnrollment() {
+		return enrollment;
+	}
+
+	public void setEnrollment(int enrollment) {
+		this.enrollment = enrollment;
 	}
 
 	public int[] getMembers() {
