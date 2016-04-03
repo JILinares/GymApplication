@@ -117,6 +117,18 @@ public class Member {
 		this.classes = classes;
 	}
 	
+	public int setTrainer(Trainer trainer){
+		int enroll = trainer.getEnrollment();
+		trainer.setEnrollment(enroll++);
+		return trainer.getEnrollment();
+	}
+	
+	public int register(Class cl){
+		int register = cl.getEnrollment();
+		cl.setEnrollment(register++);
+		return register;
+		
+	}
 	
 	
 	
