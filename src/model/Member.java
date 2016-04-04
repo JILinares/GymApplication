@@ -1,10 +1,12 @@
 package model;
 
+import java.util.Random;
+
 public class Member {
 	
 	private String fName;
 	private String lName;
-	private int id;
+	private String id;
 	private String email;
 	private String phone;
 	private String street;
@@ -13,12 +15,14 @@ public class Member {
 	private String zip;
 	private Trainer[] trainers;
 	private Class[] classes;
+	private static String[] idArray = new String[500];
+	private static int idCount = 0;
 	
-	public Member(String fName, String lName, int id, String email, String phone, String street, String city,
+	public Member(String fName, String lName, String email, String phone, String street, String city,
 			String state, String zip, Trainer[] trainers, Class[] classes) {
 		this.fName = fName;
 		this.lName = lName;
-		this.id = id;
+		this.id = generateID();
 		this.email = email;
 		this.phone = phone;
 		this.street = street;
@@ -27,26 +31,27 @@ public class Member {
 		this.zip = zip;
 		this.trainers = trainers;
 		this.classes = classes;
+		idCount++;
 	}
 	public String getfName() {
 		return fName;
 	}
 
 	public boolean setfName(String fName) {
-		 String firstName = fName.trim();
-	      if(firstName.equals("")){
-	         return false;
-	      }
-	      else{
-	         for(int x = 0; x < firstName.length(); x++){
-	            if(Character.isLetter(firstName.charAt(x)) == false){
-	               return false;
-	            }
-	         }
-	      }
-	      this.fName = firstName;
-	      return true;
-	   }
+		String firstName = fName.trim();
+	    if(firstName.equals("")){
+	       return false;
+	    }
+	    else{
+	       for(int x = 0; x < firstName.length(); x++){
+	          if(Character.isLetter(firstName.charAt(x)) == false){
+	             return false;
+	          }
+	       }
+	    }
+	    this.fName = firstName;
+	    return true;
+	}
 
 	public String getlName() {
 		return lName;
@@ -54,27 +59,27 @@ public class Member {
 
 	public boolean setlName(String lName) {
 		String lastName = lName.trim();
-	      if(lastName.equals("")){
-	         return false;
-	      }
-	      else{
-	         for(int x = 0; x < lastName.length(); x++){
-	            if(Character.isLetter(lastName.charAt(x)) == false){
-	               return false;
-	            }
-	         }
-	      }
-	      this.lName = lastName;
-	      return true;
+	    if(lastName.equals("")){
+	       return false;
+	    }
+	    else{
+	       for(int x = 0; x < lastName.length(); x++){
+	          if(Character.isLetter(lastName.charAt(x)) == false){
+	             return false;
+	          }
+	       }
+	    }
+	    this.lName = lastName;
+	    return true;
 	}
 	      
 	  
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -98,7 +103,7 @@ public class Member {
 	          }
 	       }      
 	    }
-	    return false;
+	    return go;
 	}
 
 	public String getPhone() {
@@ -111,7 +116,7 @@ public class Member {
 	       return false;
 	    }
 	    else {
-	       if((aPhone.charAt(3)!=('.'))||(aPhone.charAt(7)!=('.'))){
+	       if((aPhone.charAt(3)!=('-'))||(aPhone.charAt(7)!=('-'))){
 	          return false;
 	       }
 	       else {
@@ -233,6 +238,26 @@ public class Member {
 		
 	}
 	
+	public String generateID(){
+		int randomInt;
+		boolean unique = true;
+		Random random = new Random();
+		do{
+			randomInt = random.nextInt(999999) + 100000;
+			if(idCount == 0){
+				unique = true;
+			}else{
+				for(int i = 0; i < idCount; i++){
+					if(randomInt == Integer.parseInt(idArray[i])){
+						unique = false;
+						i = idCount;
+					}
+				}
+			}
+		}while(unique == false);
+		return String.valueOf(randomInt);
+		
+	}
 	
 	
 }
