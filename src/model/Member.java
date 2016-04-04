@@ -28,7 +28,6 @@ public class Member {
 		this.trainers = trainers;
 		this.classes = classes;
 	}
-
 	public String getfName() {
 		return fName;
 	}
@@ -83,16 +82,58 @@ public class Member {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public boolean setEmail(String email) {
+		String aEmail = email.trim();
+	    boolean go = false;
+	    for(int x = 0; x < aEmail.length(); x++){
+	       if(aEmail.charAt(x)==('@')){
+	          go = true;
+	       }
+	    }
+	    if (go = true){
+	       for(int x = 0; x <aEmail.length(); x++){
+	          if(aEmail.charAt(x)==('.')){
+	             this.email = aEmail;
+	             return true;
+	          }
+	       }      
+	    }
+	    return false;
 	}
 
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public boolean setPhone(String phone) {
+		String aPhone = phone.trim();
+	    if(aPhone.length() != 12){
+	       return false;
+	    }
+	    else {
+	       if((aPhone.charAt(3)!=('.'))||(aPhone.charAt(7)!=('.'))){
+	          return false;
+	       }
+	       else {
+	          for(int x =0; x < 3; x++){
+	             if(Character.isLetter(aPhone.charAt(x)) == true){
+	                return false;
+	             }
+	          }
+	          for(int x =4; x < 7; x++){
+	             if(Character.isLetter(aPhone.charAt(x)) == true){
+	                return false;
+	             }
+	          }
+	          for(int x =8; x < 12; x++){
+	             if(Character.isLetter(aPhone.charAt(x)) == true){
+	                return false;
+	             }
+	          }
+	       }
+	    }
+	    this.phone = phone;
+	    return true;
 	}
 
 	public String getStreet() {
@@ -147,8 +188,20 @@ public class Member {
 		return zip;
 	}
 
-	public void setZip(String zip) {
-		this.zip = zip;
+	public boolean setZip(String zCode) {
+		String zip = zCode.trim();
+	      if(zip.equals("") || zip.length() != 5){
+	         return false;
+	      }
+	      else{
+	         for(int x = 0; x < zip.length(); x++){
+	            if(Character.isDigit(zip.charAt(x)) == false){
+	               return false;
+	            }
+	         }
+	      }
+	      this.zip = zip;
+	      return true;
 	}
 
 	public Trainer[] getTrainers() {
