@@ -33,17 +33,43 @@ public class Member {
 		return fName;
 	}
 
-	public void setfName(String fName) {
-		this.fName = fName;
-	}
+	public boolean setfName(String fName) {
+		 String firstName = fName.trim();
+	      if(firstName.equals("")){
+	         return false;
+	      }
+	      else{
+	         for(int x = 0; x < firstName.length(); x++){
+	            if(Character.isLetter(firstName.charAt(x)) == false){
+	               return false;
+	            }
+	         }
+	      }
+	      this.fName = firstName;
+	      return true;
+	   }
 
 	public String getlName() {
 		return lName;
 	}
 
-	public void setlName(String lName) {
-		this.lName = lName;
+	public boolean setlName(String lName) {
+		String lastName = lName.trim();
+	      if(lastName.equals("")){
+	         return false;
+	      }
+	      else{
+	         for(int x = 0; x < lastName.length(); x++){
+	            if(Character.isLetter(lastName.charAt(x)) == false){
+	               return false;
+	            }
+	         }
+	      }
+	      this.lName = lastName;
+	      return true;
 	}
+	      
+	  
 
 	public int getId() {
 		return id;
@@ -73,16 +99,40 @@ public class Member {
 		return street;
 	}
 
-	public void setStreet(String street) {
-		this.street = street;
+	public boolean setStreet(String street) {
+		String str = street.trim();
+	      if(str.equals("")){
+	         return false;
+	      }
+	      else{
+	         for(int x = 0; x < str.length(); x++){
+	            if(Character.isLetter(str.charAt(x)) == false){
+	               return false;
+	            }
+	         }
+	      }
+	      this.street = str;
+	      return true;
 	}
 
 	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public boolean setCity(String city) {
+		String cit = city.trim();
+	      if(cit.equals("")){
+	         return false;
+	      }
+	      else{
+	         for(int x = 0; x < cit.length(); x++){
+	            if(Character.isLetter(cit.charAt(x)) == false){
+	               return false;
+	            }
+	         }
+	      }
+	      this.city = cit;
+	      return true;
 	}
 
 	public String getState() {
