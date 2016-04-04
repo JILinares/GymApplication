@@ -1,5 +1,9 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Trainer {
 	
 	private String fName;
@@ -7,9 +11,9 @@ public class Trainer {
 	private String id;
 	private int capacity;
 	private int enrollment;
-	private int[] members;
+	private String[] members;
 	
-	public Trainer(String fName, String lName, String id, int capacity, int enrollment, int[] members) {
+	public Trainer(String fName, String lName, String id, int capacity, int enrollment, String[] members) {
 		super();
 		this.fName = fName;
 		this.lName = lName;
@@ -59,14 +63,46 @@ public class Trainer {
 		this.enrollment = enrollment;
 	}
 
-	public int[] getMembers() {
+	public String[] getMembers() {
 		return members;
 	}
 
-	public void setMembers(int[] members) {
+	public void setMembers(String[] members) {
 		this.members = members;
 	}
 	
+	public static Trainer[] readFile(){
+		Trainer[] trainers = new Trainer[15];
+		String filename = "trainers.txt";
+		File file = new File(filename);
+		int mCount = 0;
+		int tCount = 0;
+		try {
+			Scanner scan = new Scanner(file);
+			String line = scan.nextLine();
+			Scanner br = new Scanner(line);
+			while(scan.hasNextLine()){
+				String id = br.next();
+				String fName = br.next();
+				String lName = br.next();
+				int capacity = br.nextInt();
+				String[] members = new String[capacity];
+				int enrollment = br.nextInt();
+				while(br.hasNext()){
+					members[mCount] = br.next();
+					mCount++;
+				}
+				Trainer trainer = new Trainer(fName,lName,id,capacity,enrollment,members);
+				trainers[tCount] = trainer;
+				tCount++;
+			}
+			scan.close();
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return trainers;
+	}
 	
 	
 
