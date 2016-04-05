@@ -1,6 +1,12 @@
 package model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Member {
 	
@@ -31,8 +37,29 @@ public class Member {
 		this.zip = zip;
 		this.trainers = trainers;
 		this.classes = classes;
+		idArray[idCount] = this.id;
 		idCount++;
 	}
+	
+	
+	public Member(String fName, String lName, String id, String email, String phone, String street, String city,
+			String state, String zip, Trainer[] trainers, Class[] classes) {
+		this.fName = fName;
+		this.lName = lName;
+		this.id = id;
+		this.email = email;
+		this.phone = phone;
+		this.street = street;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.trainers = trainers;
+		this.classes = classes;
+		idArray[idCount] = this.id;
+		idCount++;
+	}
+
+
 	public String getfName() {
 		return fName;
 	}
@@ -257,6 +284,101 @@ public class Member {
 		}while(unique == false);
 		return String.valueOf(randomInt);
 		
+	}
+	
+	public static Member[] readFile(Trainer[] trainerArray, Class[] classArray){
+		Member[] members = new Member[500];
+		String filename = "members.txt";
+		File file = new File(filename);
+		int tCount = 0;
+		int cCount = 0;
+		int aCount = 0;
+		String temp;
+		try {
+			Scanner scan = new Scanner(file);
+			String line = scan.nextLine();
+			Scanner br = new Scanner(line);
+			while(scan.hasNextLine()){
+				String id = br.next();
+				String fName = br.next();
+				String lName = br.next();
+				String email = br.next();
+				String phone = br.next();
+				String street = br.next();
+				String city = br.next();
+				String state = br.next();
+				String zip = br.next();
+				Trainer[] trainers  = new Trainer[10];
+				while(br.hasNext() && br.next() != "break"){
+					temp = br.next();
+					for(int i = 0; i < trainerArray[0].getCount(); i++){
+						if(temp.equals(trainerArray[i].getId())){
+							trainers[tCount] = trainerArray[i];
+							tCount++;
+						}
+					}
+				}
+				String brk = br.next();
+				Class[] classes = new Class[10];
+				while(br.hasNext()){
+					temp = br.next();
+					for(int i = 0; i < classArray[0].getCount(); i++){
+						if(temp.equals(classArray[i].getName())){
+							classes[cCount] = classArray[i];
+							tCount++;
+						}
+					}
+				}	
+				Member member = new Member(fName,lName,id,email,phone,street,city,state,zip,trainers,classes);
+				members[aCount] = member;
+				aCount++;
+			}
+			scan.close();
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return members;
+	}
+	
+	public static void writeFile(Member[] members){
+		 BufferedWriter bw = null;
+	        try{
+	        	 bw = new BufferedWriter(new FileWriter("members.txt", false));
+	        	for(int i = 0;members[i] != null; i++){
+		            bw.write(members[i].toString());
+		            bw.newLine();
+	        	}
+	        }catch(FileNotFoundException e){
+	            System.out.println("File can not be created");
+	        } catch (IOException ex) {
+	            System.out.println("Error in Input/Output");
+	        }finally{
+	            try {
+	                bw.close();
+	            } catch (IOException ex) {
+	        }
+	    }
+	}
+
+	@Override
+	public String toString() {
+		String tString = "";
+		String cString = "";
+		if(trainers.length != 0){
+			for(int i = 0; i < trainers[0].getCount();i++){
+				tString = tString + this.trainers[i].getId() + " ";
+			}
+		}
+		if(classes.length != 0){
+			for(int i = 0; i < classes[0].getCount();i++){
+				cString = cString + this.classes[i].getName() + " ";
+			}
+		}
+		return id + " " + fName + " " + lName + " " + email
+				+ " " + phone + " " + street + " " + city + " "
+				+ state + " " + zip + " " + tString + " break "
+				+ cString;
 	}
 	
 	

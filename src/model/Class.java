@@ -1,7 +1,10 @@
 package model;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Class {
@@ -11,6 +14,7 @@ public class Class {
 	private int capacity;
 	private int enrollment;
 	private String[] members;
+	private static int classCount = 0;
 
 	public Class(String name, String description, int capacity, int enrollment, String[] members) {
 		this.name = name;
@@ -18,6 +22,7 @@ public class Class {
 		this.capacity = capacity;
 		this.enrollment = enrollment;
 		this.members = members;
+		classCount++;
 	}
 
 	public String getName() {
@@ -60,6 +65,10 @@ public class Class {
 		this.members = members;
 	}
 	
+	public static int getCount(){
+		return classCount;
+	}
+	
 	public static Class[] readFile(){
 		Class[] classes = new Class[15];
 		String filename = "classes.txt";
@@ -90,6 +99,36 @@ public class Class {
 			e.printStackTrace();
 		}
 		return classes;
+	}
+	
+	public static void writeFile(Class[] classes){
+		 BufferedWriter bw = null;
+	        try{
+	        	 bw = new BufferedWriter(new FileWriter("classes.txt", false));
+	        	for(int i = 0;classes[i] != null; i++){
+		            bw.write(classes[i].toString());
+		            bw.newLine();
+	        	}
+	        }catch(FileNotFoundException e){
+	            System.out.println("File can not be created");
+	        } catch (IOException ex) {
+	            System.out.println("Error in Input/Output");
+	        }finally{
+	            try {
+	                bw.close();
+	            } catch (IOException ex) {
+	        }
+	    }
+	}
+
+	@Override
+	public String toString() {
+		String mem = "";
+		for(int i = 0; i < capacity;i++){
+			mem = mem + this.members[i] + " ";
+		}
+		return name + " " + description + " " + capacity
+				+ " " + enrollment + " " + mem;
 	}
 	
 	
