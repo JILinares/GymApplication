@@ -5,12 +5,15 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import model.AuthLogin;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -25,29 +28,41 @@ public class Login extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUserName;
 	private JPasswordField passwordField;
-	private AuthLogin[] logins;
+	private AuthLogin[] logins;	//logins read from file on construction
+	private AuthLogin returnedLogin = null; //which user was logged in, will be NULL if user chooses to close the dialog
 
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-			Login dialog = new Login();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		
+		AuthLogin staffmember = null;
 
+		try {
+			Login l = new Login();
+		
+			l.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			//dialog.setModal(true);
+			l.setVisible(true);
+			staffmember = l.getLogin();
+			//JOptionPane.showInputDialog(dialog);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(null != staffmember)
+		{System.out.printf("User %s validated", staffmember.getUsername());} else
+		{System.out.println("no login selected; user closed");}
+		
 	}
 	
-	public AuthLogin returnedLogin;
 	
 	/**
 	 * Create the dialog.
 	 */
 	public Login() {
+		setModal(true);
 		logins = AuthLogin.readFile();
 		
 		setTitle("Gym");
@@ -117,14 +132,42 @@ public class Login extends JDialog {
 				JButton okButton = new JButton("Login");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						//Todo: test and close
+						login(e);
 					}
 				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
+			
+			
+			
+		}
+		
+		
+	}
+	
+	public AuthLogin getLogin(){return this.returnedLogin;}
+
+	
+	/*
+	 * Verifies Login information
+	 */
+	private void login(ActionEvent e)
+	{	
+		if (e.getActionCommand() != "OK") return;
+		
+		String u = this.txtUserName.getText(), pw = new String(this.passwordField.getPassword());
+		returnedLogin = AuthLogin.checkLogin(logins, u, pw); //verify staff member
+		
+		if(null == returnedLogin)
+		{
+			JOptionPane.showMessageDialog(this, "Error in user name or password", this.getTitle(),
+					JOptionPane.ERROR_MESSAGE);
+		}
+		else{	
+			this.setVisible(false);
+			this.dispose();
 		}
 	}
-
 }
