@@ -5,11 +5,11 @@ package model;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Trainer {
 	
@@ -84,12 +84,11 @@ public class Trainer {
 		return trainerCount;
 	}
 	
-	public static Trainer[] readFile(){
-		Trainer[] trainers = new Trainer[15];
+	public static HashMap<String,Trainer> readFile(){
+		HashMap<String,Trainer> trainers = new HashMap<String,Trainer>();
 		String filename = "trainers.txt";
 		File file = new File(filename);
 		int mCount = 0;
-		int tCount = 0;
 		try {
 			Scanner scan = new Scanner(file);
 			String line = scan.nextLine();
@@ -106,8 +105,7 @@ public class Trainer {
 					mCount++;
 				}
 				Trainer trainer = new Trainer(fName,lName,id,capacity,enrollment,members);
-				trainers[tCount] = trainer;
-				tCount++;
+				trainers.put(id, trainer);
 			}
 			scan.close();
 			br.close();
@@ -117,12 +115,13 @@ public class Trainer {
 		return trainers;
 	}
 	
-	public static void writeFile(Trainer[] trainers){
+	public static void writeFile(HashMap<String,Trainer> trainers){
 		 BufferedWriter bw = null;
 	        try{
 	        	 bw = new BufferedWriter(new FileWriter("trainers.txt", false));
-	        	for(int i = 0;trainers[i] != null; i++){
-		            bw.write(trainers[i].toString());
+	        	 Set<String> keys = trainers.keySet();
+	        	for(String i:keys){
+		            bw.write(trainers.get(i).toString());
 		            bw.newLine();
 	        	}
 	        }catch(FileNotFoundException e){
@@ -140,7 +139,7 @@ public class Trainer {
 	@Override
 	public String toString() {
 		String mem = "";
-		for(int i = 0; i < capacity;i++){
+		for(int i = 0; i < this.enrollment;i++){
 			mem = mem + this.members[i] + " ";
 		}
 		return id + " " + fName + " " + lName + " " + capacity

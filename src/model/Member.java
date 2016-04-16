@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.HashMap;
 
 public class Member {
 	
@@ -21,13 +23,13 @@ public class Member {
 	private String city;
 	private String state;
 	private String zip;
-	private Trainer[] trainers;
+	private HashMap<String,Trainer> trainers;
 	private Class[] classes;
 	private static String[] idArray = new String[500];
 	private static int idCount = 0;
 	
 	public Member(String fName, String lName, String email, String phone, String street, String city,
-			String state, String zip, Trainer[] trainers, Class[] classes) {
+			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
 		this.fName = fName;
 		this.lName = lName;
 		this.id = generateID();
@@ -45,7 +47,7 @@ public class Member {
 	
 	
 	public Member(String fName, String lName, String id, String email, String phone, String street, String city,
-			String state, String zip, Trainer[] trainers, Class[] classes) {
+			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
 		this.fName = fName;
 		this.lName = lName;
 		this.id = id;
@@ -238,11 +240,11 @@ public class Member {
 	      return true;
 	}
 
-	public Trainer[] getTrainers() {
+	public HashMap<String,Trainer> getTrainers() {
 		return trainers;
 	}
 
-	public void setTrainers(Trainer[] trainers) {
+	public void setTrainers(HashMap<String,Trainer> trainers) {
 		this.trainers = trainers;
 	}
 
@@ -288,14 +290,12 @@ public class Member {
 		
 	}
 	
-	public static Member[] readFile(Trainer[] trainerArray, Class[] classArray){
-		Member[] members = new Member[500];
+	public static HashMap<String,Member> readFile(HashMap<String,Trainer> trainers, Class[] classArray){
+		HashMap<String,Member> members = new HashMap<String,Member>();
 		String filename = "members.txt";
 		File file = new File(filename);
-		int tCount = 0;
 		int cCount = 0;
-		int aCount = 0;
-		String temp;
+		String key;
 		try {
 			Scanner scan = new Scanner(file);
 			String line = scan.nextLine();
@@ -310,30 +310,25 @@ public class Member {
 				String city = br.next();
 				String state = br.next();
 				String zip = br.next();
-				Trainer[] trainers  = new Trainer[10];
-				while(br.hasNext() && br.next() != "break"){
-					temp = br.next();
-					for(int i = 0; i < trainerArray[0].getCount(); i++){
-						if(temp.equals(trainerArray[i].getId())){
-							trainers[tCount] = trainerArray[i];
-							tCount++;
-						}
+				HashMap<String,Trainer> trainerMap = new HashMap<String,Trainer>();
+				while(br.hasNext() && !br.next().equals("break")){
+					key = br.next();
+					if(trainers.containsKey(key)){
+						trainerMap.put(key, trainerMap.get(key));
 					}
 				}
-				String brk = br.next();
+				br.next();
 				Class[] classes = new Class[10];
 				while(br.hasNext()){
-					temp = br.next();
-					for(int i = 0; i < classArray[0].getCount(); i++){
-						if(temp.equals(classArray[i].getName())){
+					key = br.next();
+					for(int i = 0; i < Class.getCount(); i++){
+						if(key.equals(classArray[i].getName())){
 							classes[cCount] = classArray[i];
-							tCount++;
 						}
 					}
 				}	
-				Member member = new Member(fName,lName,id,email,phone,street,city,state,zip,trainers,classes);
-				members[aCount] = member;
-				aCount++;
+				Member member = new Member(fName,lName,id,email,phone,street,city,state,zip,trainerMap,classes);
+				members.put(id, member);
 			}
 			scan.close();
 			br.close();
@@ -343,14 +338,16 @@ public class Member {
 		return members;
 	}
 	
-	public static void writeFile(Member[] members){
+	public static void writeFile(HashMap<String,Member> members){
 		 BufferedWriter bw = null;
+
 	        try{
-	        	 bw = new BufferedWriter(new FileWriter("members.txt", false));
-	        	for(int i = 0;members[i] != null; i++){
-		            bw.write(members[i].toString());
-		            bw.newLine();
-	        	}
+	        	bw = new BufferedWriter(new FileWriter("members.txt", false));
+	        	Set<String> keys = members.keySet();
+		        for(String i:keys){
+		        	bw.write(members.get(i).toString());
+			        bw.newLine();
+		        }
 	        }catch(FileNotFoundException e){
 	            System.out.println("File can not be created");
 	        } catch (IOException ex) {
@@ -367,13 +364,14 @@ public class Member {
 	public String toString() {
 		String tString = "";
 		String cString = "";
-		if(trainers.length != 0){
-			for(int i = 0; i < trainers[0].getCount();i++){
-				tString = tString + this.trainers[i].getId() + " ";
+		if(this.trainers.size() != 0){
+			Set<String> keys = this.trainers.keySet();
+			for(String i:keys){
+				tString = tString + this.trainers.get(i).getId() + " ";
 			}
 		}
 		if(classes.length != 0){
-			for(int i = 0; i < classes[0].getCount();i++){
+			for(int i = 0; i < Class.getCount();i++){
 				cString = cString + this.classes[i].getName() + " ";
 			}
 		}
