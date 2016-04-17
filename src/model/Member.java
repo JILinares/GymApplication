@@ -14,20 +14,21 @@ import java.util.HashMap;
 
 public class Member {
 	
-	private String fName;
-	private String lName;
-	private String id;
+	private String fName;//First Name
+	private String lName;//Last Name
+	private String id;//MemberID
 	private String email;
-	private String phone;
-	private String street;
+	private String phone;//Phone number
+	private String street;//Street Address
 	private String city;
 	private String state;
 	private String zip;
-	private HashMap<String,Trainer> trainers;
-	private Class[] classes;
-	private static String[] idArray = new String[500];
+	private HashMap<String,Trainer> trainers;//HashMap of Trainers, Trainer ID serves as the key
+	private Class[] classes;//Array of Classes
+	private static String[] idArray = new String[500];//Array of Member IDs
 	private static int idCount = 0;
 	
+	//This constructor is used when creating a new member
 	public Member(String fName, String lName, String email, String phone, String street, String city,
 			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
 		this.fName = fName;
@@ -45,7 +46,7 @@ public class Member {
 		idCount++;
 	}
 	
-	
+	//This constructor is used when reading file contents and creating a member from  thise contents
 	public Member(String fName, String lName, String id, String email, String phone, String street, String city,
 			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
 		this.fName = fName;
@@ -261,7 +262,7 @@ public class Member {
 		trainer.setEnrollment(enroll++);
 		return trainer.getEnrollment();
 	}
-	
+	//Registers a member to a class. Increments the enrollment
 	public int register(Class cl){
 		int register = cl.getEnrollment();
 		cl.setEnrollment(register++);
@@ -269,6 +270,7 @@ public class Member {
 		
 	}
 	
+	//Generates an ID. Checks into an array if the ID already exist. If so, a new ID is generated until one is available.
 	public String generateID(){
 		int randomInt;
 		boolean unique = true;
@@ -290,6 +292,7 @@ public class Member {
 		
 	}
 	
+	//Reads a file and gets all contents into a HashMap of members.
 	public static HashMap<String,Member> readFile(HashMap<String,Trainer> trainers, Class[] classArray){
 		HashMap<String,Member> members = new HashMap<String,Member>();
 		String filename = "members.txt";
@@ -338,6 +341,7 @@ public class Member {
 		return members;
 	}
 	
+	//Write the contents inside a HashMap into a file
 	public static void writeFile(HashMap<String,Member> members){
 		 BufferedWriter bw = null;
 

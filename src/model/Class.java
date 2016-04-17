@@ -11,12 +11,12 @@ import java.util.Scanner;
 
 public class Class {
 
-	private String name;
-	private String description;
-	private int capacity;
-	private int enrollment;
-	private String[] members;
-	private static int classCount = 0;
+	private String name;//Name of class
+	private String description;//Description of the class
+	private int capacity;//The max capacity of the class
+	private int enrollment;//Current enrollment
+	private String[] members;//All IDs of students in the class
+	private static int classCount = 0;//Total number of 
 
 	public Class(String name, String description, int capacity, int enrollment, String[] members) {
 		this.name = name;
@@ -71,6 +71,7 @@ public class Class {
 		return classCount;
 	}
 	
+	//Reads a file and returns contents inside an array of Class objects
 	public static Class[] readFile(){
 		Class[] classes = new Class[15];
 		String filename = "classes.txt";
@@ -103,6 +104,7 @@ public class Class {
 		return classes;
 	}
 	
+	//Writes the contents inside a Class array into a file
 	public static void writeFile(Class[] classes){
 		 BufferedWriter bw = null;
 	        try{
