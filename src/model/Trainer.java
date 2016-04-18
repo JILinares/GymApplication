@@ -23,7 +23,7 @@ public class Trainer {
 	
 	public Trainer(String fName, String lName, String id, int capacity, int enrollment, String[] members) {
 		super();
-		this.fName = fName;
+		this.fName = fName;;
 		this.lName = lName;
 		this.id = id;
 		this.capacity = capacity;

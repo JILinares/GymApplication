@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Class {
 
@@ -15,10 +16,10 @@ public class Class {
 	private String description;//Description of the class
 	private int capacity;//The max capacity of the class
 	private int enrollment;//Current enrollment
-	private String[] members;//All IDs of students in the class
+	private ArrayList<String> members;//All IDs of students in the class
 	private static int classCount = 0;//Total number of 
 
-	public Class(String name, String description, int capacity, int enrollment, String[] members) {
+	public Class(String name, String description, int capacity, int enrollment, ArrayList<String> members) {
 		this.name = name;
 		this.description = description;
 		this.capacity = capacity;
@@ -59,11 +60,11 @@ public class Class {
 		this.enrollment = enrollment;
 	}
 
-	public String[] getMembers() {
+	public ArrayList<String> getMembers() {
 		return members;
 	}
 
-	public void setMembers(String[] members) {
+	public void setMembers(ArrayList<String> members) {
 		this.members = members;
 	}
 	
@@ -72,12 +73,10 @@ public class Class {
 	}
 	
 	//Reads a file and returns contents inside an array of Class objects
-	public static Class[] readFile(){
-		Class[] classes = new Class[15];
+	public static ArrayList<Class> readFile(){
+		ArrayList<Class> classes = new ArrayList<>();
 		String filename = "classes.txt";
 		File file = new File(filename);
-		int mCount = 0;
-		int cCount = 0;
 		try {
 			Scanner scan = new Scanner(file);
 			String line = scan.nextLine();
@@ -86,15 +85,13 @@ public class Class {
 				String name = br.next();
 				String description = br.next();
 				int capacity = br.nextInt();
-				String[] members = new String[capacity];
+				ArrayList<String> members = new ArrayList<>(capacity);
 				int enrollment = br.nextInt();
 				while(br.hasNext()){
-					members[mCount] = br.next();
-					mCount++;
+					members.add(br.next());
 				}
 				Class cl = new Class(name,description,capacity,enrollment,members);
-				classes[cCount] = cl;
-				cCount++;
+				classes.add(cl);
 			}
 			scan.close();
 			br.close();
@@ -105,12 +102,12 @@ public class Class {
 	}
 	
 	//Writes the contents inside a Class array into a file
-	public static void writeFile(Class[] classes){
+	public static void writeFile(ArrayList<Class> classes){
 		 BufferedWriter bw = null;
 	        try{
 	        	 bw = new BufferedWriter(new FileWriter("classes.txt", false));
-	        	for(int i = 0;classes[i] != null; i++){
-		            bw.write(classes[i].toString());
+	        	for(int i = 0;classes.get(i)!= null; i++){
+		            bw.write(classes.get(i).toString());
 		            bw.newLine();
 	        	}
 	        }catch(FileNotFoundException e){
@@ -128,8 +125,8 @@ public class Class {
 	@Override
 	public String toString() {
 		String mem = "";
-		for(int i = 0; i < capacity;i++){
-			mem = mem + this.members[i] + " ";
+		for(int i = 0; i < members.size();i++){
+			mem = mem + this.members.get(i) + " ";
 		}
 		return name + " " + description + " " + capacity
 				+ " " + enrollment + " " + mem;
