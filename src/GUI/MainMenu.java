@@ -51,7 +51,7 @@ public class MainMenu extends JDialog {
 	{
 		public void actionPerformed(ActionEvent e) {
 			action=e.getActionCommand();
-			System.out.println(action);
+			//System.out.println(action);
 			//JButton button = (JButton)e.getSource();
 			dispose();
 			
