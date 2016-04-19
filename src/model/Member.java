@@ -11,25 +11,27 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Member {
 	
-	private String fName;
-	private String lName;
-	private String id;
+	private String fName;//First Name
+	private String lName;//Last Name
+	private String id;//MemberID
 	private String email;
-	private String phone;
-	private String street;
+	private String phone;//Phone number
+	private String street;//Street Address
 	private String city;
 	private String state;
 	private String zip;
-	private HashMap<String,Trainer> trainers;
-	private Class[] classes;
-	private static String[] idArray = new String[500];
+	private HashMap<String,Trainer> trainers;//HashMap of Trainers, Trainer ID serves as the key
+	private ArrayList<Class> classes;//Array of Classes
+	private static String[] idArray = new String[500];//Array of Member IDs
 	private static int idCount = 0;
 	
+	//This constructor is used when creating a new member
 	public Member(String fName, String lName, String email, String phone, String street, String city,
-			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
+			String state, String zip, HashMap<String,Trainer> trainers, ArrayList<Class> classes) {
 		this.fName = fName;
 		this.lName = lName;
 		this.id = generateID();
@@ -45,9 +47,9 @@ public class Member {
 		idCount++;
 	}
 	
-	
+	//This constructor is used when reading file contents and creating a member from  those contents
 	public Member(String fName, String lName, String id, String email, String phone, String street, String city,
-			String state, String zip, HashMap<String,Trainer> trainers, Class[] classes) {
+			String state, String zip, HashMap<String,Trainer> trainers, ArrayList<Class> classes) {
 		this.fName = fName;
 		this.lName = lName;
 		this.id = id;
@@ -248,11 +250,11 @@ public class Member {
 		this.trainers = trainers;
 	}
 
-	public Class[] getClasses() {
+	public ArrayList<Class> getClasses() {
 		return classes;
 	}
 
-	public void setClasses(Class[] classes) {
+	public void setClasses(ArrayList<Class> classes) {
 		this.classes = classes;
 	}
 	
@@ -261,7 +263,7 @@ public class Member {
 		trainer.setEnrollment(enroll++);
 		return trainer.getEnrollment();
 	}
-	
+	//Registers a member to a class. Increments the enrollment
 	public int register(Class cl){
 		int register = cl.getEnrollment();
 		cl.setEnrollment(register++);
@@ -269,6 +271,7 @@ public class Member {
 		
 	}
 	
+	//Generates an ID. Checks into an array if the ID already exist. If so, a new ID is generated until one is available.
 	public String generateID(){
 		int randomInt;
 		boolean unique = true;
@@ -290,11 +293,11 @@ public class Member {
 		
 	}
 	
-	public static HashMap<String,Member> readFile(HashMap<String,Trainer> trainers, Class[] classArray){
+	//Reads a file and gets all contents into a HashMap of members.
+	public static HashMap<String,Member> readFile(HashMap<String,Trainer> trainers, ArrayList<Class> classList){
 		HashMap<String,Member> members = new HashMap<String,Member>();
 		String filename = "members.txt";
 		File file = new File(filename);
-		int cCount = 0;
 		String key;
 		try {
 			Scanner scan = new Scanner(file);
@@ -318,12 +321,12 @@ public class Member {
 					}
 				}
 				br.next();
-				Class[] classes = new Class[10];
+				ArrayList<Class> classes = new ArrayList<>();
 				while(br.hasNext()){
 					key = br.next();
 					for(int i = 0; i < Class.getCount(); i++){
-						if(key.equals(classArray[i].getName())){
-							classes[cCount] = classArray[i];
+						if(key.equals(classList.get(i).getName())){
+							classes.add(classList.get(i));
 						}
 					}
 				}	
@@ -337,7 +340,7 @@ public class Member {
 		}
 		return members;
 	}
-	
+	//Write the contents inside a HashMap into a file
 	public static void writeFile(HashMap<String,Member> members){
 		 BufferedWriter bw = null;
 
@@ -370,9 +373,9 @@ public class Member {
 				tString = tString + this.trainers.get(i).getId() + " ";
 			}
 		}
-		if(classes.length != 0){
+		if(this.classes.size() != 0){
 			for(int i = 0; i < Class.getCount();i++){
-				cString = cString + this.classes[i].getName() + " ";
+				cString = cString + this.classes.get(i).getName() + " ";
 			}
 		}
 		return id + " " + fName + " " + lName + " " + email

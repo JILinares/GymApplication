@@ -13,17 +13,17 @@ import java.util.Set;
 
 public class Trainer {
 	
-	private String fName;
-	private String lName;
-	private String id;
-	private int capacity;
-	private int enrollment;
-	private String[] members;
-	private static int trainerCount = 0;
+	private String fName;//First Name
+	private String lName;//Last Name
+	private String id;//Member ID
+	private int capacity;//Trainer's capacity for students
+	private int enrollment;//Trainer's student enrollment
+	private String[] members;//IDs of all students
+	private static int trainerCount = 0;//The Number of Trainers
 	
 	public Trainer(String fName, String lName, String id, int capacity, int enrollment, String[] members) {
 		super();
-		this.fName = fName;
+		this.fName = fName;;
 		this.lName = lName;
 		this.id = id;
 		this.capacity = capacity;
@@ -84,6 +84,7 @@ public class Trainer {
 		return trainerCount;
 	}
 	
+	//Reads file into a HashMap and then returns the HashMap.
 	public static HashMap<String,Trainer> readFile(){
 		HashMap<String,Trainer> trainers = new HashMap<String,Trainer>();
 		String filename = "trainers.txt";
@@ -115,6 +116,7 @@ public class Trainer {
 		return trainers;
 	}
 	
+	//Take a HashMap of Trainers and writes contents into a file
 	public static void writeFile(HashMap<String,Trainer> trainers){
 		 BufferedWriter bw = null;
 	        try{
