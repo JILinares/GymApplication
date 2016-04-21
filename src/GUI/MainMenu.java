@@ -1,3 +1,4 @@
+//@Author Jonathan Eddy jeddy6@gmu.edu G00801804
 package GUI;
 
 import java.awt.EventQueue;
@@ -53,7 +54,7 @@ public class MainMenu extends JDialog {
 			action=e.getActionCommand();
 			//System.out.println(action);
 			//JButton button = (JButton)e.getSource();
-			dispose();
+			setVisible(false);
 			
 		}
 	};
@@ -64,7 +65,7 @@ public class MainMenu extends JDialog {
 	public MainMenu() {
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosed(WindowEvent arg0) {
+			public void windowClosing(WindowEvent arg0) {
 				if(action==null){action ="Exit";}
 			}
 		});
