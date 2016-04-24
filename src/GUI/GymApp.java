@@ -73,8 +73,9 @@ public class GymApp {
 					null, "No members to view", "Gym",
 					JOptionPane.WARNING_MESSAGE);
 		}
+		
 		//TODO: viewMemember dialog set, prompt for individual member
-		Member selected = null;
+		Member selected = selectMember(members);
 		InputMember im = new InputMember(selected,true);
 		im.setTitle("Gym: View Member");
 		im.setVisible(true);
@@ -98,28 +99,53 @@ public class GymApp {
 	{	
 		System.out.println("update path taken; " + members.size() + " members passed in");
 		//TODO: prompt for specific member
-		Member selected = null;
+		Member selected = selectMember(members);
 		
 		//TODO: update member if user did not cancel
 		InputMember im = new InputMember(selected,false);
 		im.setTitle("Gym: Update Member");
 		im.setVisible(true);
 		im.dispose();
+		//TODO: update key and rehash
 		
 		return false;
 	}
 	
+	//Select a trainer or return Null if canceled
+	static Member selectMember(HashMap<String,Member> members)
+	{
+		Set<String> keys = members.keySet();
+		String selection = (String) JOptionPane.showInputDialog(null, "Enter the member's ID number:", "Gym",
+				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, keys.toArray(new String[0]), null);
+		return members.get(selection);
+	}
 
 	
 	//assign one or more classes
 	static boolean assignClass(HashMap<String,Member> members, ArrayList<model.Class> classes)
 	{	//TODO: assignClass dialog set
+		Member selected = selectMember(members);
+		
 		System.out.println("class path taken");
 		return false;
 	}
 	
 	static boolean assignTrainer(HashMap<String,Member> members, HashMap<String,Trainer> trainers)
 	{	//TODO: assignTrainer dialog set
+		
+		Member m = selectMember(members);
+		//TODO: if m != null
+		
+		Set<String> keys = members.keySet();
+		//TODO: remove "full" trainers from keyset
+		//TODO: append remaining time slots for trainer to each key
+		
+		String selection = (String) JOptionPane.showInputDialog(null, "Select a Trainer:", "Gym",
+				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, keys.toArray(new String[0]), null);
+		//TODO: if user did not cancel
+		Trainer t = trainers.get(selection);
+		//m.setTrainer(t);
+		
 		System.out.println("trainer path taken");
 		return false;
 	}

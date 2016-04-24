@@ -68,6 +68,11 @@ public class MainMenu extends JDialog {
 			public void windowClosing(WindowEvent arg0) {
 				if(action==null){action ="Exit";}
 			}
+			@Override
+			public void windowActivated(WindowEvent arg0)
+			{
+				action=null;
+			}
 		});
 		setTitle("Gym");
 		setModal(true);

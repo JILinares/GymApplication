@@ -35,7 +35,8 @@ public class InputMember extends JDialog {
 	private JTextField fName;
 	private JTextField address;
 	private JTextComponent[] fields;
-	private Member member;	public Member getMember(){return member;}
+	private Member member;	
+	private JTextPane registeredFor;public Member getMember(){return member;}
 	
 	/**
 	 * Launch the application.
@@ -76,6 +77,9 @@ public class InputMember extends JDialog {
 		if(null != member)	{readFields();}
 		if(readOnly)	for(JTextComponent t : fields)
 			{t.setEditable(false);}
+		
+		registeredFor.setVisible(true);
+		//TODO: add registered trainer and classes to textpane
 
 	}
 	
@@ -84,7 +88,7 @@ public class InputMember extends JDialog {
 	 */
 	public InputMember() {
 		setModal(true);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 350);
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setVgap(5);
 		borderLayout.setHgap(5);
@@ -94,9 +98,9 @@ public class InputMember extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.rowWeights = new double[]{1.0, 1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("First Name:");
@@ -182,7 +186,7 @@ public class InputMember extends JDialog {
 			lblNewLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 			GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 			gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
-			gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+			gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_lblNewLabel.gridx = 0;
 			gbc_lblNewLabel.gridy = 4;
 			contentPanel.add(lblNewLabel, gbc_lblNewLabel);
@@ -190,10 +194,22 @@ public class InputMember extends JDialog {
 		{
 			address = new JTextField();
 			GridBagConstraints gbc_address = new GridBagConstraints();
+			gbc_address.insets = new Insets(0, 0, 5, 0);
 			gbc_address.fill = GridBagConstraints.HORIZONTAL;
 			gbc_address.gridx = 1;
 			gbc_address.gridy = 4;
 			contentPanel.add(address, gbc_address);
+		}
+		{
+			registeredFor = new JTextPane();
+			registeredFor.setVisible(false);
+			registeredFor.setEditable(false);
+			GridBagConstraints gbc_registeredFor = new GridBagConstraints();
+			gbc_registeredFor.gridwidth = 2;
+			gbc_registeredFor.fill = GridBagConstraints.BOTH;
+			gbc_registeredFor.gridx = 0;
+			gbc_registeredFor.gridy = 5;
+			contentPanel.add(registeredFor, gbc_registeredFor);
 		}
 		contentPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{fName, lName, email, phoneNumber, address}));
 
