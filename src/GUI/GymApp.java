@@ -16,6 +16,7 @@ public class GymApp {
 		MainMenu mm = new MainMenu(); //main menu
 		//InputMember im = new InputMember();
 		JDialog[] dR = {dl,mm}; //References to all dialogues
+			//May have been redundant, as login and main menu are the only persistent dialogs
 		
 		AuthLogin l = null; //returned login from dialogue
 		boolean modified = false; //the big state variable, upon which Members.txt is written
@@ -125,6 +126,10 @@ public class GymApp {
 	static boolean assignClass(HashMap<String,Member> members, ArrayList<model.Class> classes)
 	{	//TODO: assignClass dialog set
 		Member selected = selectMember(members);
+		//TODO: if null/cancel (left out for dummy demo purposes)
+		ClassSelector ds = new ClassSelector(selected,classes);
+		ds.setVisible(true);
+		ds.dispose();
 		
 		System.out.println("class path taken");
 		return false;
