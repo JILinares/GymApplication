@@ -13,7 +13,8 @@ public class GymApp {
 	public static void main(String[] args) {
 		//for simplicity/quick typing, singleton classes are given acronyms
 		Login dl = new Login(); //dialogue login
-		MainMenu mm = new MainMenu(); //main menu		
+		MainMenu mm = new MainMenu(); //main menu
+		//InputMember im = new InputMember();
 		JDialog[] dR = {dl,mm}; //References to all dialogues
 		
 		AuthLogin l = null; //returned login from dialogue
@@ -72,19 +73,39 @@ public class GymApp {
 					null, "No members to view", "Gym",
 					JOptionPane.WARNING_MESSAGE);
 		}
-		//TODO: viewMemember dialog
+		//TODO: viewMemember dialog set, prompt for individual member
+		Member selected = null;
+		InputMember im = new InputMember(selected,true);
+		im.setTitle("Gym: View Member");
+		im.setVisible(true);
+		im.dispose();
 	}
 	
 	//each of these update functions return FALSE upon user canceling input (pressing the exit button in the title bar))
 	static boolean createMember(HashMap<String,Member> members)
-	{	//TODO: createMember dialog
+	{	
 		System.out.println("create path taken; " + members.size() + " members passed in");
+		InputMember im = new InputMember();
+		im.setTitle("Gym: Add Member");
+		im.setVisible(true);
+		im.dispose();
+		//TODO: add new member if user did not cancel
 		return false;
+
 	}
 	
 	static boolean updateMember(HashMap<String,Member> members)
-	{	//TODO: updateMember dialog set
+	{	
 		System.out.println("update path taken; " + members.size() + " members passed in");
+		//TODO: prompt for specific member
+		Member selected = null;
+		
+		//TODO: update member if user did not cancel
+		InputMember im = new InputMember(selected,false);
+		im.setTitle("Gym: Update Member");
+		im.setVisible(true);
+		im.dispose();
+		
 		return false;
 	}
 	
