@@ -22,7 +22,7 @@ public class GymApp {
 		boolean modified = false; //the big state variable, upon which Members.txt is written
 		
 		//objects read from files
-		HashMap<String,Trainer> tH = (new File("trainer.txt").exists()) ?
+		HashMap<String,Trainer> tH = (new File("trainers.txt").exists()) ?
 				Trainer.readFile() : new HashMap<String,Trainer>();
 		ArrayList<model.Class> cA = (new File("classes.txt").exists()) ? 
 				model.Class.readFile() : new ArrayList<model.Class>();
@@ -141,17 +141,50 @@ public class GymApp {
 		Member m = selectMember(members);
 		//TODO: if m != null
 		
-		Set<String> keys = members.keySet();
+		//Set<String> keys = trainers.keySet();
+		String[] options = getTrainerOptions(trainers);
 		//TODO: remove "full" trainers from keyset
 		//TODO: append remaining time slots for trainer to each key
 		
 		String selection = (String) JOptionPane.showInputDialog(null, "Select a Trainer:", "Gym",
-				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, keys.toArray(new String[0]), null);
+				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, options, null);
 		//TODO: if user did not cancel
-		Trainer t = trainers.get(selection);
+		String id = selection.substring(0, selection.indexOf(' ', 0));
+		
+		Trainer t = trainers.get(id);
 		//m.setTrainer(t);
 		
 		System.out.println("trainer path taken");
 		return false;
 	}
+	
+	//produces formated strings from hashmap of trainer
+	/*ugly way of doing it; requires extracting key from string
+		
+	*/
+	static String[] getTrainerOptions(HashMap<String,Trainer> map)
+	{
+		String[] retval = new String[map.size()];
+		Set<Map.Entry<String, Trainer>> set = map.entrySet();
+		Iterator<Map.Entry<String, Trainer>> iterator = set.iterator();
+		
+		
+		for(int i=0; iterator.hasNext(); i++)
+		{	Map.Entry<String, Trainer> entry = iterator.next(); 
+			StringBuilder line = new StringBuilder(entry.getKey());
+			Trainer t = entry.getValue();
+			line.append(
+					String.format(" %s %s (%d enrolled of %d)", 
+							t.getfName(),
+							t.getlName(),
+							t.getEnrollment(),
+							t.getCapacity())
+					);
+			retval[i] = line.toString();
+		}
+		
+		return retval;
+	}
+	
+	
 }
