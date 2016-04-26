@@ -27,6 +27,14 @@ public class Class {
 		this.members = members;
 		classCount++;
 	}
+	
+	public Class(String name, String description, int capacity, int enrollment) {
+		this.name = name;
+		this.description = description;
+		this.capacity = capacity;
+		this.enrollment = enrollment;
+		classCount++;
+	}
 
 	public String getName() {
 		return name;
@@ -77,24 +85,26 @@ public class Class {
 		ArrayList<Class> classes = new ArrayList<>();
 		String filename = "classes.txt";
 		File file = new File(filename);
+		int capacity, enrollment;
 		try {
 			Scanner scan = new Scanner(file);
-			String line = scan.nextLine();
-			Scanner br = new Scanner(line);
+			scan.useDelimiter(",");
+			//String line = scan.nextLine();
+			//Scanner br = new Scanner(line);
 			while(scan.hasNextLine()){
-				String name = br.next();
-				String description = br.next();
-				int capacity = br.nextInt();
-				ArrayList<String> members = new ArrayList<>(capacity);
-				int enrollment = br.nextInt();
-				while(br.hasNext()){
-					members.add(br.next());
-				}
-				Class cl = new Class(name,description,capacity,enrollment,members);
+				String name = scan.next();
+				//System.out.println(name);
+				String description = scan.next();
+				//System.out.println(description);
+				capacity = scan.nextInt();
+				//System.out.println(capacity);
+				enrollment = scan.nextInt();
+				//System.out.println(enrollment);
+				Class cl = new Class(name,description,capacity,enrollment);
 				classes.add(cl);
 			}
 			scan.close();
-			br.close();
+			//br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -106,9 +116,12 @@ public class Class {
 		 BufferedWriter bw = null;
 	        try{
 	        	 bw = new BufferedWriter(new FileWriter("classes.txt", false));
-	        	for(int i = 0;classes.get(i)!= null; i++){
+	        	for(int i = 0;i < classes.size(); i++){
 		            bw.write(classes.get(i).toString());
-		            bw.newLine();
+		            if(i != classes.size() - 1){
+		            	bw.write(",");
+		            }
+		           // bw.newLine();
 	        	}
 	        }catch(FileNotFoundException e){
 	            System.out.println("File can not be created");
@@ -124,12 +137,12 @@ public class Class {
 
 	@Override
 	public String toString() {
-		String mem = "";
-		for(int i = 0; i < members.size();i++){
-			mem = mem + this.members.get(i) + " ";
-		}
-		return name + " " + description + " " + capacity
-				+ " " + enrollment + " " + mem;
+		//String mem = "";
+		//for(int i = 0; i < members.size();i++){
+		//	mem = mem + this.members.get(i) + " ";
+		//}
+		return name + "," + description + "," + capacity
+				+ "," + enrollment;
 	}
 	
 	
