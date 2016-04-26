@@ -244,6 +244,7 @@ public class Member {
 		if(null == newTrainer) return -1;
 		if(newTrainer.isFull()) return 0;
 		newTrainer.addMember();
+		this.trainerID = trainerID;
 		return newTrainer.getEnrollment();
 		
 		//int enroll = trainer.getEnrollment();
