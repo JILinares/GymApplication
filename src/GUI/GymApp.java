@@ -28,8 +28,8 @@ public class GymApp {
 				model.Class.readFile() : new ArrayList<model.Class>();
 		
 		//should work even if passed empty map and array list
-		HashMap<String,Member> mH = (new File("members.txt").exists()) ?
-				Member.readFile(tH, cA) : new HashMap<String,Member>();
+		HashMap<Integer,Member> mH = (new File("members.txt").exists()) ?
+				Member.readFile(tH, cA) : new HashMap<Integer,Member>();
 		
 		//validate login
 		dl.setVisible(true); //modal dialogue, will not continue untile dispose is called
@@ -67,13 +67,15 @@ public class GymApp {
 		{	Member.writeFile(mH);	}
 	}
 
-	static void viewMember(HashMap<String,Member> members)
+	static void viewMember(HashMap<Integer,Member> members)
 	{	System.out.println("update path taken; " + members.size() + " members passed in");
 		if(0==members.size())
 			{JOptionPane.showMessageDialog(
 					null, "No members to view", "Gym",
 					JOptionPane.WARNING_MESSAGE);
-		}
+				return;
+			}
+		
 		
 		//TODO: viewMemember dialog set, prompt for individual member
 		Member selected = selectMember(members);
@@ -84,7 +86,7 @@ public class GymApp {
 	}
 	
 	//each of these update functions return FALSE upon user canceling input (pressing the exit button in the title bar))
-	static boolean createMember(HashMap<String,Member> members)
+	static boolean createMember(HashMap<Integer,Member> members)
 	{	
 		System.out.println("create path taken; " + members.size() + " members passed in");
 		InputMember im = new InputMember();
@@ -92,38 +94,48 @@ public class GymApp {
 		im.setVisible(true);
 		im.dispose();
 		//TODO: add new member if user did not cancel
+		Member m = im.getMember();
+		if(null!=m){members.put(m.getId(), m); return true;};
 		return false;
 
 	}
 	
-	static boolean updateMember(HashMap<String,Member> members)
+	//updates a selected member reference
+	static boolean updateMember(HashMap<Integer,Member> members)
 	{	
 		System.out.println("update path taken; " + members.size() + " members passed in");
-		//TODO: prompt for specific member
+		//prompt for specific member
 		Member selected = selectMember(members);
 		
 		//TODO: update member if user did not cancel
-		InputMember im = new InputMember(selected,false);
-		im.setTitle("Gym: Update Member");
-		im.setVisible(true);
-		im.dispose();
-		//TODO: update key and rehash
+		if(null != selected){
+			InputMember im = new InputMember(selected,false);
+			im.setTitle("Gym: Update Member");
+			im.setVisible(true);
+			im.dispose();
+			
+			return true;
+		}
 		
 		return false;
 	}
 	
 	//Select a trainer or return Null if canceled
-	static Member selectMember(HashMap<String,Member> members)
+	/*ugly way of doing it; requires extracting key from string
+	 and recreates a list that does not change every function call*/
+	static Member selectMember(HashMap<Integer,Member> members)
 	{
-		Set<String> keys = members.keySet();
+		//Set<Integer> keys = members.keySet();
+		String[] options = getMemberOptions(members);
 		String selection = (String) JOptionPane.showInputDialog(null, "Enter the member's ID number:", "Gym",
-				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, keys.toArray(new String[0]), null);
-		return members.get(selection);
+				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, options, null);
+		String key = selection.substring(0, selection.indexOf(' ',0));
+		return members.get(Integer.parseInt(key));
 	}
 
 	
 	//assign one or more classes
-	static boolean assignClass(HashMap<String,Member> members, ArrayList<model.Class> classes)
+	static boolean assignClass(HashMap<Integer,Member> members, ArrayList<model.Class> classes)
 	{	//TODO: assignClass dialog set
 		Member selected = selectMember(members);
 		//TODO: if null/cancel (left out for dummy demo purposes)
@@ -135,32 +147,34 @@ public class GymApp {
 		return false;
 	}
 	
-	static boolean assignTrainer(HashMap<String,Member> members, HashMap<String,Trainer> trainers)
+	static boolean assignTrainer(HashMap<Integer,Member> members, HashMap<String,Trainer> trainers)
 	{	//TODO: assignTrainer dialog set
-		
+		System.out.println("trainer path taken");
+
 		Member m = selectMember(members);
 		//TODO: if m != null
 		
 		//Set<String> keys = trainers.keySet();
 		String[] options = getTrainerOptions(trainers);
 		//TODO: remove "full" trainers from keyset
-		//TODO: append remaining time slots for trainer to each key
 		
 		String selection = (String) JOptionPane.showInputDialog(null, "Select a Trainer:", "Gym",
 				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, options, null);
-		//TODO: if user did not cancel
+		// if user did not cancel
+		if (null==selection){return false;};
+		
 		String id = selection.substring(0, selection.indexOf(' ', 0));
+		if(id==null){return false;}
 		
 		Trainer t = trainers.get(id);
-		//m.setTrainer(t);
+		if(t!=null)
+			{m.setTrainer(id,trainers); return true;}
 		
-		System.out.println("trainer path taken");
 		return false;
 	}
 	
 	//produces formated strings from hashmap of trainer
 	/*ugly way of doing it; requires extracting key from string
-		
 	*/
 	static String[] getTrainerOptions(HashMap<String,Trainer> map)
 	{
@@ -180,6 +194,25 @@ public class GymApp {
 							t.getEnrollment(),
 							t.getCapacity())
 					);
+			retval[i] = line.toString();
+		}
+		
+		return retval;
+	}
+	
+	static String[] getMemberOptions(HashMap<Integer,Member> map)
+	{
+		String[] retval = new String[map.size()];
+		Set<Map.Entry<Integer,Member>> set = map.entrySet();
+		Iterator<Map.Entry<Integer,Member>> iterator = set.iterator();
+		
+		
+		for(int i=0; iterator.hasNext(); i++)
+		{	Map.Entry<Integer, Member> entry = iterator.next(); 
+			StringBuilder line = new StringBuilder(String.valueOf(entry.getKey()));
+			Member m = entry.getValue();
+			line.append(
+			String.format(" %s %s", m.getfName(), m.getlName() ) );
 			retval[i] = line.toString();
 		}
 		
