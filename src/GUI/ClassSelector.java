@@ -1,10 +1,12 @@
 package GUI;
 import model.*;
 import java.lang.Class;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,6 +22,7 @@ public class ClassSelector extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private ArrayList<model.Class> classes;
+	private HashMap<String,Integer> hash; 
 	private Member member;
 	private JLabel lblSelectOneOr;
 
@@ -36,10 +39,11 @@ public class ClassSelector extends JDialog {
 		}
 	}
 	
-	public ClassSelector(Member member, ArrayList<model.Class> classes)
+	public ClassSelector(Member member, ArrayList<model.Class> classes, HashMap<String,Integer> resolveName)
 	{	this();
 			this.member = member;
 			this.classes = classes;
+			this.hash = resolveName;
 			//TODO: verify null
 			//TODO: append member full name to label
 			//TODO: put class fields in table

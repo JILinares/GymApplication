@@ -26,6 +26,13 @@ public class GymApp {
 				Trainer.readFile() : new HashMap<String,Trainer>();
 		ArrayList<model.Class> cA = (new File("classes.txt").exists()) ? 
 				model.Class.readFile() : new ArrayList<model.Class>();
+		/*because I did not think to add IDs to class names in the specification, 
+		 * I'll use name as a searchableID/primary key
+		 */
+		HashMap<String,Integer> resolveClassName = new HashMap<String,Integer>();
+		for(int i=0; i<cA.size(); i++)
+			{model.Class c = cA.get(i);
+			 resolveClassName.put(c.getName(), i);}
 		
 		//should work even if passed empty map and array list
 		HashMap<Integer,Member> mH = (new File("members.txt").exists()) ?
@@ -50,7 +57,7 @@ public class GymApp {
 				case 'C':	if("Create".equals(action))
 								{modified = createMember(mH);}
 					else	if("Class".equals(action))
-								{modified = assignClass(mH,cA);}
+								{modified = assignClass(mH,cA,resolveClassName);}
 					break;
 				case 'V':	viewMember(mH);
 					break;
@@ -135,11 +142,11 @@ public class GymApp {
 
 	
 	//assign one or more classes
-	static boolean assignClass(HashMap<Integer,Member> members, ArrayList<model.Class> classes)
+	static boolean assignClass(HashMap<Integer,Member> members, ArrayList<model.Class> classes, HashMap<String,Integer> hash)
 	{	//TODO: assignClass dialog set
 		Member selected = selectMember(members);
 		//TODO: if null/cancel (left out for dummy demo purposes)
-		ClassSelector ds = new ClassSelector(selected,classes);
+		ClassSelector ds = new ClassSelector(selected,classes,hash);
 		ds.setVisible(true);
 		ds.dispose();
 		
