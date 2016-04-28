@@ -1,0 +1,2 @@
+Yoga Class,A basic class of yoga,30,10,
+Karate Class,A basic class of karate,25,15

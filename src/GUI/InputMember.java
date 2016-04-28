@@ -23,7 +23,7 @@ import javax.swing.JFormattedTextField;
 import java.awt.Component;
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
+import swing.FocusTraversalOnArray;
 
 import model.Member;
 import java.awt.event.ActionListener;

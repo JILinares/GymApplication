@@ -35,6 +35,21 @@ public class Class {
 		this.enrollment = enrollment;
 		classCount++;
 	}
+	
+	public Object getValue(int i){
+        switch(i){
+            case 0:
+                return this.name;
+            case 1:
+                return this.description;
+            case 2:
+                return this.capacity;
+            case 3:
+                return this.enrollment;
+        }
+        return "";
+                
+    }
 
 	public String getName() {
 		return name;
@@ -134,6 +149,8 @@ public class Class {
 	        }
 	    }
 	}
+	
+	
 
 	@Override
 	public String toString() {

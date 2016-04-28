@@ -67,27 +67,11 @@ public class ClassSelector extends JDialog {
 			scrollPane.setAutoscrolls(true);
 			contentPanel.add(scrollPane, BorderLayout.CENTER);
 			{
-				table = new JTable();
-				table.setModel(new DefaultTableModel(
-					new Object[][] {
-						{null, null, null, null, null},
-						{null, null, null, null, null},
-						{null, null, null, null, null},
-					}, //Simply for demonstration purposes
-					new String[] {
-						"Is Enrolled", "Class Name", "Description", "Capacity", "# Enrolled"
-					}
-				) {
-					Class[] columnTypes = new Class[] {
-						Boolean.class, String.class, String.class, Integer.class, Integer.class
-					};
-					public Class getColumnClass(int columnIndex) {
-						return columnTypes[columnIndex];
-					}
-				});
-				table.getColumnModel().getColumn(0).setPreferredWidth(63);
-				table.getColumnModel().getColumn(2).setPreferredWidth(240);
-				table.setAutoscrolls(false);
+				table = new javax.swing.JTable();
+				table.setAutoCreateRowSorter(true);
+				
+				table.setModel(new ClassTableModel());
+				
 				scrollPane.setViewportView(table);
 			}
 		}

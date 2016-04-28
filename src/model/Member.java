@@ -386,7 +386,7 @@ public class Member {
 		return id + ", " + fName + ", " + lName + ", " + email
 				+ ", " + phone + ", " + street + ", " + city + ", "
 				+ state + ", " + zip + 
-					((trainerID==null) ? "" :  ", " + trainerID)  /* + " break "*/
+					((trainerID==null) ? "" :  ", " + trainerID) /*" break "*/
 				/*+ cString*/;
 	}
 	
