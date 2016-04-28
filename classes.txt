@@ -1,2 +1,6 @@
-Yoga Class,A basic class of yoga,30,10,
+Pilates,Using focused controlled movements & careful breathing to improve endurance of the body's core,15,12
+Cycling,reserved stationary bikes are made available for two hour blocks,20,18
+Yoga,a description goes here,10,7
+Free Weights,a description goes here,23,19
+Cardio,a description goes here,13,10
 Karate Class,A basic class of karate,25,15
