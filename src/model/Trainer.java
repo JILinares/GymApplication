@@ -71,7 +71,20 @@ public class Trainer {
 	public void setEnrollment(int enrollment) {
 		this.enrollment = enrollment;
 	}
-
+	
+	public boolean isFull(){return capacity == enrollment;}
+	public boolean isEmpty(){return 0 == enrollment;}
+	
+	public boolean addMember(){
+		if(isFull()){return false;}
+			enrollment++;
+		return true;
+	}
+	
+	public void removeMember()
+	{	if(!isEmpty()){enrollment--;}
+	}
+	
 	public String[] getMembers() {
 		return members;
 	}
@@ -89,27 +102,32 @@ public class Trainer {
 		HashMap<String,Trainer> trainers = new HashMap<String,Trainer>();
 		String filename = "trainers.txt";
 		File file = new File(filename);
-		int mCount = 0;
+//		int mCount = 0;
 		try {
 			Scanner scan = new Scanner(file);
-			String line = scan.nextLine();
-			Scanner br = new Scanner(line);
+			
 			while(scan.hasNextLine()){
+				//removed bug: INFINITE LOOP does not read next line within loop
+				String line = scan.nextLine();
+				Scanner br = new Scanner(line);
 				String id = br.next();
 				String fName = br.next();
 				String lName = br.next();
 				int capacity = br.nextInt();
-				String[] members = new String[capacity];
-				int enrollment = br.nextInt();
-				while(br.hasNext()){
-					members[mCount] = br.next();
-					mCount++;
-				}
-				Trainer trainer = new Trainer(fName,lName,id,capacity,enrollment,members);
+//				String[] members = new String[capacity];
+//				int enrollment = br.nextInt();
+//				while(br.hasNext()){
+//					members[mCount] = br.next();
+//					mCount++;
+//				}
+				Trainer trainer = new Trainer(fName,lName,id,capacity,0,null);
 				trainers.put(id, trainer);
+				
+				//line = scan.nextLine();
+				br.close();
 			}
 			scan.close();
-			br.close();
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -117,26 +135,28 @@ public class Trainer {
 	}
 	
 	//Take a HashMap of Trainers and writes contents into a file
-	public static void writeFile(HashMap<String,Trainer> trainers){
-		 BufferedWriter bw = null;
-	        try{
-	        	 bw = new BufferedWriter(new FileWriter("trainers.txt", false));
-	        	 Set<String> keys = trainers.keySet();
-	        	for(String i:keys){
-		            bw.write(trainers.get(i).toString());
-		            bw.newLine();
-	        	}
-	        }catch(FileNotFoundException e){
-	            System.out.println("File can not be created");
-	        } catch (IOException ex) {
-	            System.out.println("Error in Input/Output");
-	        }finally{
-	            try {
-	                bw.close();
-	            } catch (IOException ex) {
-	        }
-	    }
-	}
+	//JPE+++unneeded
+	
+//	public static void writeFile(HashMap<String,Trainer> trainers){
+//		 BufferedWriter bw = null;
+//	        try{
+//	        	 bw = new BufferedWriter(new FileWriter("trainers.txt", false));
+//	        	 Set<String> keys = trainers.keySet();
+//	        	for(String i:keys){
+//		            bw.write(trainers.get(i).toString());
+//		            bw.newLine();
+//	        	}
+//	        }catch(FileNotFoundException e){
+//	            System.out.println("File can not be created");
+//	        } catch (IOException ex) {
+//	            System.out.println("Error in Input/Output");
+//	        }finally{
+//	            try {
+//	                bw.close();
+//	            } catch (IOException ex) {
+//	        }
+//	    }
+//	}
 
 	@Override
 	public String toString() {

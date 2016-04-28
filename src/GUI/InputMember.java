@@ -13,6 +13,8 @@ import javax.swing.text.MaskFormatter;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.text.ParseException;
@@ -24,6 +26,8 @@ import javax.swing.JTextField;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import model.Member;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 //This will be an all encompassing tool, which supports editing and viewing
 public class InputMember extends JDialog {
@@ -36,7 +40,9 @@ public class InputMember extends JDialog {
 	private JTextField address;
 	private JTextComponent[] fields;
 	private Member member;	
-	private JTextPane registeredFor;public Member getMember(){return member;}
+	private JTextPane registeredFor;
+	private JButton okButton;
+	private JButton cancelButton;public Member getMember(){return member;}
 	
 	/**
 	 * Launch the application.
@@ -46,6 +52,7 @@ public class InputMember extends JDialog {
 			InputMember dialog = new InputMember();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
+			dialog.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,29 +71,108 @@ public class InputMember extends JDialog {
 						member.getState(),
 						member.getZip())		
 				);
+//		try{
+//		registeredFor.getDocument().insertString(0, member.getTrainerID(), null);
+//		}
+//		catch()
+//		
+		//TODO: resolve ID to name
+		registeredFor.setText(member.getTrainerID());
 	}
 	
-	private void writeFields()
+	private boolean writeFields()
 	{//TODO parse fields, validate
+		String addr = this.address.getText();
+		int endStreet = addr.lastIndexOf(' ', 
+						addr.lastIndexOf(' ',
+						addr.lastIndexOf(' ')-1)-1);
+		//preferably use regex to get match of last three elements, but this will work
 		
+		String err="";
+		String street = null;
+		String lastFields[] = null;
+		if (-1 == endStreet) { err +="Address format needs to be\n" +
+		                             "#### StreetName Ln/Blvd/St/etc City State Zipcode"; } 
+		else{
+			street = addr.substring(0, endStreet);
+			lastFields = addr.substring(endStreet+1).split("\\s");
+			if( null==lastFields ||  3 != lastFields.length ) {err +="\n needs city state and zipcode\n";}
+		}
+		
+		if(err.length() == 0)	try{
+			if(null==member)
+			{
+				member = new Member(
+							fName.getText(),
+							lName.getText(),
+							email.getText(),
+							phoneNumber.getText(),
+							street,
+							lastFields[0],
+							lastFields[1],
+							lastFields[2]
+						);
+			}else{
+				err += member.setfName(fName.getText()) ? "" : "First Name not properly formatted\n";
+				err += member.setlName(lName.getText()) ? "" : "Last Name not properly formatted\n" ;
+				err += member.setEmail(email.getText()) ? "" : "Invalid email\n";
+				err += member.setPhone(phoneNumber.getText()) ? "" : "incomplete phone number\n";
+				err += member.setStreet(street) ? "" : "Street Address improperly formatted\n";
+				err += member.setCity(lastFields[0]) ? "" : "City has non-alphabetical characaters\n";
+				err += member.setZip(lastFields[2]) ? "" : "Not a valid zip code\n";
+			}
+		}catch
+		(IllegalArgumentException e)
+		{
+			err += '\n' + e.getMessage();
+		}
+		if (err.length() > 0)
+		{
+			JOptionPane.showMessageDialog(this, err, this.getTitle(), JOptionPane.ERROR_MESSAGE);
+			return false;
+		}else{return true;}
 	}
 	
 	public InputMember(Member member, boolean readOnly)
 	{	this();
 		this.member = member;
 		if(null != member)	{readFields();}
-		if(readOnly)	for(JTextComponent t : fields)
-			{t.setEditable(false);}
-		
+		if(readOnly){ 
+			for(JTextComponent t : fields)
+				{t.setEditable(false);}
+			cancelButton.setVisible(false);
+			//okButton.removeActionListener(okButton.);
+			okButton.setActionCommand("Cancel");
+		}
+	
 		registeredFor.setVisible(true);
 		//TODO: add registered trainer and classes to textpane
 
 	}
 	
+
+	
+
+	//button handler
+	ActionListener buttonListener = new ActionListener(){
+		public void actionPerformed(ActionEvent arg0) {
+			if(arg0.getActionCommand().equals("Cancel"))
+			{
+				member=null;
+			} else
+			if(arg0.getActionCommand().equals("OK"))
+			{
+				if(!writeFields()){ return; }
+			}
+			setVisible(false);
+			
+		}
+	};
 	/**
 	 * Create the dialog.
 	 */
 	public InputMember() {
+		
 		setModal(true);
 		setBounds(100, 100, 450, 350);
 		BorderLayout borderLayout = new BorderLayout();
@@ -218,13 +304,15 @@ public class InputMember extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
+				okButton.addActionListener(buttonListener);
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(buttonListener);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -232,4 +320,5 @@ public class InputMember extends JDialog {
 		fields = new JTextComponent[]{fName, lName, email, phoneNumber, address};
 	}
 
+	
 }

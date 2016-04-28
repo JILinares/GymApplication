@@ -3,6 +3,7 @@
 package model;
 
 import java.io.BufferedWriter;
+import java.util.regex.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -11,45 +12,69 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.HashMap;
+import java.util.HashSet;
+//import java.util.LinkedList;
 import java.util.ArrayList;
 
 public class Member {
 	
-	private String fName;//First Name
-	private String lName;//Last Name
-	private String id;//MemberID
-	private String email;
-	private String phone;//Phone number
-	private String street;//Street Address
-	private String city;
-	private String state;
-	private String zip;
-	private HashMap<String,Trainer> trainers;//HashMap of Trainers, Trainer ID serves as the key
+	private String fName; 	public String getfName() {return fName;}//First Name
+	private String lName; 	public String getlName() {return lName;}//Last Name
+	private int id; 		public int getId() {return id;};//MemberID
+	private String email;	public String getEmail() {return email;}
+	private String phone;	public String getPhone() {return phone;}//Phone number
+	private String street;	public String getStreet() {return street;}//Street Address
+	private String city;	public String getCity() {return city;}
+	private String state;	public String getState() {return state;}
+	private String zip;		public String getZip() {return zip;}
+	private String trainerID;	public String getTrainerID(){return trainerID;}
+	//private HashMap<String,Trainer> trainers;//HashMap of Trainers, Trainer ID serves as the key
 	private ArrayList<Class> classes;//Array of Classes
-	private static String[] idArray = new String[500];//Array of Member IDs
-	private static int idCount = 0;
+	//private static String[] idArray = new String[500];//Array of Member IDs
+	private static HashSet<Integer> usedIds = new HashSet<Integer>(500);
+	
+	//private static int idCount = 0;
+	private static Pattern singleWordMatcher = Pattern.compile("\\w+");
+
 	
 	//This constructor is used when creating a new member
 	public Member(String fName, String lName, String email, String phone, String street, String city,
-			String state, String zip, HashMap<String,Trainer> trainers, ArrayList<Class> classes) {
-		this.fName = fName;
-		this.lName = lName;
+			String state, String zip) {
+
+		StringBuilder exceptions = new StringBuilder();
 		this.id = generateID();
-		this.email = email;
-		this.phone = phone;
-		this.street = street;
-		this.city = city;
+		if (!(setfName(fName) && setlName(lName)))
+			{exceptions.append("name");}
+		
+		if(!setEmail(email))
+		{	if(exceptions.length() > 0) {exceptions.append(", ");}
+			exceptions.append("email");}
+		
+		if(!setPhone(phone))
+		{	if(exceptions.length() > 0) {exceptions.append(", ");}
+			exceptions.append("phone");}
+		
+		if(!(	setStreet(street) &&
+				setCity(city) &&
+				setZip(zip) ))
+		{	if(exceptions.length() > 0) {exceptions.append(", ");}
+			exceptions.append("full address");}
+//		this.city = city;
+		
+		if(exceptions.length() > 0)
+		{	throw new IllegalArgumentException("the following feild(s) are invalid\n" + exceptions);	}
+		
 		this.state = state;
-		this.zip = zip;
-		this.trainers = trainers;
-		this.classes = classes;
-		idArray[idCount] = this.id;
-		idCount++;
+//		this.zip = zip;
+//		this.trainers = trainers;
+//		this.classes = classes;
+		//idArray[idCount] = this.id;
+		//idCount++;
 	}
 	
 	//This constructor is used when reading file contents and creating a member from  those contents
-	public Member(String fName, String lName, String id, String email, String phone, String street, String city,
-			String state, String zip, HashMap<String,Trainer> trainers, ArrayList<Class> classes) {
+	protected Member(String fName, String lName, int id, String email, String phone, String street, String city,
+			String state, String zip/*, String trainerID, ArrayList<Class> classes */) {
 		this.fName = fName;
 		this.lName = lName;
 		this.id = id;
@@ -59,65 +84,35 @@ public class Member {
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
-		this.trainers = trainers;
-		this.classes = classes;
-		idArray[idCount] = this.id;
-		idCount++;
+//		this.trainerID = trainerID;
+//		this.classes = classes;
+		//idArray[idCount] = this.id;
+		//idCount++;
+		usedIds.add(id);
 	}
 
-
-	public String getfName() {
-		return fName;
-	}
 
 	public boolean setfName(String fName) {
 		String firstName = fName.trim();
-	    if(firstName.equals("")){
-	       return false;
-	    }
-	    else{
-	       for(int x = 0; x < firstName.length(); x++){
-	          if(Character.isLetter(firstName.charAt(x)) == false){
-	             return false;
-	          }
-	       }
-	    }
-	    this.fName = firstName;
+		if(!singleWordMatcher.matcher(firstName).matches())
+			{return false;}
+		
+		this.fName = firstName;
 	    return true;
-	}
-
-	public String getlName() {
-		return lName;
 	}
 
 	public boolean setlName(String lName) {
 		String lastName = lName.trim();
-	    if(lastName.equals("")){
-	       return false;
-	    }
-	    else{
-	       for(int x = 0; x < lastName.length(); x++){
-	          if(Character.isLetter(lastName.charAt(x)) == false){
-	             return false;
-	          }
-	       }
-	    }
+		if(!singleWordMatcher.matcher(lastName).matches())
+			{return false;}
+		
 	    this.lName = lastName;
 	    return true;
 	}
 	      
-	  
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
+	public void setId(int id) {
+		if(!usedIds.contains(id))
+			this.id = id;
 	}
 
 	public boolean setEmail(String email) {
@@ -137,10 +132,6 @@ public class Member {
 	       }      
 	    }
 	    return go;
-	}
-
-	public String getPhone() {
-		return phone;
 	}
 
 	public boolean setPhone(String phone) {
@@ -174,81 +165,62 @@ public class Member {
 	    return true;
 	}
 
-	public String getStreet() {
-		return street;
-	}
-
+	private static Pattern streetMatcher = Pattern.compile("\\d+ \\w+ \\w+");
 	public boolean setStreet(String street) {
 		String str = street.trim();
 	      if(str.equals("")){
 	         return false;
 	      }
-	      else{
-	         for(int x = 0; x < str.length(); x++){
-	            if(Character.isLetter(str.charAt(x)) == false){
-	               return false;
-	            }
-	         }
-	      }
+			//this would only store the streetname, no address or street type;
+	      //limit! does not take in room number;
+	      //	      else{
+//	         for(int x = 0; x < str.length(); x++){
+//	            if(Character.isLetter(str.charAt(x)) == false){
+//	               return false;
+//	            }
+//	         }
+//	      }
+
+	      if(!streetMatcher.matcher(str).matches()) 
+	      	{return false;}		
 	      this.street = str;
 	      return true;
 	}
 
-	public String getCity() {
-		return city;
-	}
-
 	public boolean setCity(String city) {
 		String cit = city.trim();
-	      if(cit.equals("")){
-	         return false;
-	      }
-	      else{
-	         for(int x = 0; x < cit.length(); x++){
-	            if(Character.isLetter(cit.charAt(x)) == false){
-	               return false;
-	            }
-	         }
-	      }
+	      if(cit.equals(""))
+	      { return false;}
+		
+	      if(!singleWordMatcher.matcher(cit).matches())
+			{return false;}
 	      this.city = cit;
 	      return true;
 	}
 
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
+	public void setState(String state) {	
+		//String st = state.trim();
+		//if(!singleWordMatcher.matcher(st).matches())
+		//{return false;}
 		this.state = state;
 	}
 
-	public String getZip() {
-		return zip;
-	}
-
+	static Pattern zipMatcher = Pattern.compile("\\d{5}");
 	public boolean setZip(String zCode) {
-		String zip = zCode.trim();
-	      if(zip.equals("") || zip.length() != 5){
-	         return false;
-	      }
-	      else{
-	         for(int x = 0; x < zip.length(); x++){
-	            if(Character.isDigit(zip.charAt(x)) == false){
-	               return false;
-	            }
-	         }
-	      }
+		  String zip = zCode.trim();
+		  if(!zipMatcher.matcher(zCode).matches())
+				{return false;}
 	      this.zip = zip;
 	      return true;
 	}
 
-	public HashMap<String,Trainer> getTrainers() {
-		return trainers;
-	}
+//	public HashMap<String,Trainer> getTrainers() {
+//		return trainers;
+//	}
 
-	public void setTrainers(HashMap<String,Trainer> trainers) {
-		this.trainers = trainers;
-	}
+//	public void setTrainers(HashMap<String,Trainer> trainers) {
+//		this.trainers = trainers;
+//	}
 
 	public ArrayList<Class> getClasses() {
 		return classes;
@@ -258,10 +230,26 @@ public class Member {
 		this.classes = classes;
 	}
 	
-	public int setTrainer(Trainer trainer){
-		int enroll = trainer.getEnrollment();
-		trainer.setEnrollment(enroll++);
-		return trainer.getEnrollment();
+	//decrement old trainer and increment new trainer, if there is one
+	//minor bug; avoided by GUI design: if new trainer does not exist or is full old trainer is still erased
+	public int setTrainer(String trainerID, HashMap<String,Trainer> trainers){
+		if(null != this.trainerID){
+			Trainer oldTrainer = trainers.get(this.trainerID);
+			if(null == oldTrainer){throw new IllegalArgumentException("bad trainer file?");}
+			oldTrainer.removeMember();
+		}
+		if(null == trainerID) return 0;
+		
+		Trainer newTrainer = trainers.get(trainerID);
+		if(null == newTrainer) return -1;
+		if(newTrainer.isFull()) return 0;
+		newTrainer.addMember();
+		this.trainerID = trainerID;
+		return newTrainer.getEnrollment();
+		
+		//int enroll = trainer.getEnrollment();
+		//trainer.setEnrollment(enroll++);
+		//return trainer.getEnrollment();
 	}
 	//Registers a member to a class. Increments the enrollment
 	public int register(Class cl){
@@ -272,82 +260,99 @@ public class Member {
 	}
 	
 	//Generates an ID. Checks into an array if the ID already exist. If so, a new ID is generated until one is available.
-	public String generateID(){
+	public int generateID(){
+		//the runtime on this is potentially infinite
 		int randomInt;
-		boolean unique = true;
+		boolean unique = false;
+		//insanity check: if hashset is huge, give up
+		if (usedIds.size() > 250000)
+			{return -1; }
 		Random random = new Random();
 		do{
 			randomInt = random.nextInt(999999) + 100000;
-			if(idCount == 0){
+			
+			if(usedIds.isEmpty()){
 				unique = true;
 			}else{
-				for(int i = 0; i < idCount; i++){
-					if(randomInt == Integer.parseInt(idArray[i])){
-						unique = false;
-						i = idCount;
-					}
-				}
+				unique = !usedIds.contains(randomInt);
 			}
 		}while(unique == false);
-		return String.valueOf(randomInt);
+		usedIds.add(randomInt);
+		return randomInt;
 		
 	}
 	
 	//Reads a file and gets all contents into a HashMap of members.
-	public static HashMap<String,Member> readFile(HashMap<String,Trainer> trainers, ArrayList<Class> classList){
-		HashMap<String,Member> members = new HashMap<String,Member>();
+	public static HashMap<Integer,Member> readFile(HashMap<String,Trainer> trainers, ArrayList<Class> classList){
+		HashMap<Integer,Member> members = new HashMap<Integer,Member>();
 		String filename = "members.txt";
 		File file = new File(filename);
 		String key;
 		try {
 			Scanner scan = new Scanner(file);
-			String line = scan.nextLine();
-			Scanner br = new Scanner(line);
-			while(scan.hasNextLine()){
-				String id = br.next();
-				String fName = br.next();
-				String lName = br.next();
-				String email = br.next();
-				String phone = br.next();
-				String street = br.next();
-				String city = br.next();
-				String state = br.next();
-				String zip = br.next();
-				HashMap<String,Trainer> trainerMap = new HashMap<String,Trainer>();
-				while(br.hasNext() && !br.next().equals("break")){
-					key = br.next();
-					if(trainers.containsKey(key)){
-						trainerMap.put(key, trainerMap.get(key));
-					}
+			while(scan.hasNextLine()){ //same issue as in Trainer
+				String line = scan.nextLine();
+				Scanner br = new Scanner(line);
+				br.useDelimiter(",");
+					
+				int id = br.nextInt();
+				String fName = br.next().trim();
+				String lName = br.next().trim();
+				String email = br.next().trim();
+				String phone = br.next().trim();
+				
+				String street = br.next().trim();
+				
+				String city = br.next().trim();
+				String state = br.next().trim();
+				String zip = br.next().trim();
+				
+				
+//				HashMap<String,Trainer> trainerMap = new HashMap<String,Trainer>();
+//				while(br.hasNext() && !br.next().equals("break")){
+//					key = br.next();
+//					if(trainers.containsKey(key)){
+//						trainerMap.put(key, trainerMap.get(key));
+//					}
+//				}
+//				//br.next();
+//				ArrayList<Class> classes = new ArrayList<>();
+//				while(br.hasNext()){
+//					key = br.next();
+//					for(int i = 0; i < Class.getCount(); i++){
+//						if(key.equals(classList.get(i).getName())){
+//							classes.add(classList.get(i));
+//						}
+//					}
+//				}	
+			
+				
+				Member member = new Member(fName,lName,id,email,phone,street,city,state,zip);
+				String trainerID = null;
+				
+				if(br.hasNext()){trainerID = br.next();
+					member.setTrainer(trainerID.trim(), trainers);
 				}
-				br.next();
-				ArrayList<Class> classes = new ArrayList<>();
-				while(br.hasNext()){
-					key = br.next();
-					for(int i = 0; i < Class.getCount(); i++){
-						if(key.equals(classList.get(i).getName())){
-							classes.add(classList.get(i));
-						}
-					}
-				}	
-				Member member = new Member(fName,lName,id,email,phone,street,city,state,zip,trainerMap,classes);
+		
+				
 				members.put(id, member);
+				br.close();
 			}
 			scan.close();
-			br.close();
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return members;
 	}
 	//Write the contents inside a HashMap into a file
-	public static void writeFile(HashMap<String,Member> members){
+	public static void writeFile(HashMap<Integer,Member> members){
 		 BufferedWriter bw = null;
 
 	        try{
 	        	bw = new BufferedWriter(new FileWriter("members.txt", false));
-	        	Set<String> keys = members.keySet();
-		        for(String i:keys){
+	        	Set<Integer> keys = members.keySet();
+		        for(Integer i:keys){
 		        	bw.write(members.get(i).toString());
 			        bw.newLine();
 		        }
@@ -365,23 +370,24 @@ public class Member {
 
 	@Override
 	public String toString() {
-		String tString = "";
+		//String tString = "";
 		String cString = "";
-		if(this.trainers.size() != 0){
-			Set<String> keys = this.trainers.keySet();
-			for(String i:keys){
-				tString = tString + this.trainers.get(i).getId() + " ";
-			}
-		}
-		if(this.classes.size() != 0){
-			for(int i = 0; i < Class.getCount();i++){
-				cString = cString + this.classes.get(i).getName() + " ";
-			}
-		}
-		return id + " " + fName + " " + lName + " " + email
-				+ " " + phone + " " + street + " " + city + " "
-				+ state + " " + zip + " " + tString + " break "
-				+ cString;
+//		if(this.trainers.size() != 0){
+//			Set<String> keys = this.trainers.keySet();
+//			for(String i:keys){
+//				tString = tString + this.trainers.get(i).getId() + " ";
+//			}
+//		}
+//		if(this.classes.size() != 0){
+//			for(int i = 0; i < Class.getCount();i++){
+//				cString = cString + this.classes.get(i).getName() + " ";
+//			}
+//		}
+		return id + ", " + fName + ", " + lName + ", " + email
+				+ ", " + phone + ", " + street + ", " + city + ", "
+				+ state + ", " + zip + 
+					((trainerID==null) ? "" :  ", " + trainerID)  /* + " break "*/
+				/*+ cString*/;
 	}
 	
 	
