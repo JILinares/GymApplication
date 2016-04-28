@@ -12,8 +12,9 @@ import javax.swing.table.AbstractTableModel;
 public class ClassTableModel extends AbstractTableModel implements TableModelListener{
 	
 	private String[] names = {"Is Enrolled", "Class Name", "Description", "Capacity", "# Enrolled"};
-	private static ArrayList<Class> data = new ArrayList<>();
-	private static ArrayList<Object> modifiedData = new ArrayList<>();
+	private  ArrayList<Class> data = new ArrayList<>();
+	private  ArrayList<Object> modifiedData = new ArrayList<>();
+	
 	
 	public ClassTableModel(){
 		data = Class.readFile();

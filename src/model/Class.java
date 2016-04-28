@@ -1,6 +1,6 @@
 //Jose Linares jlinare3@masonlive.gmu.edu G# G00855944
 
-package model;
+package src.model;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -100,23 +100,21 @@ public class Class {
 		ArrayList<Class> classes = new ArrayList<>();
 		String filename = "classes.txt";
 		File file = new File(filename);
-		int capacity, enrollment;
+		int capacity, enrollment=0;
 		try {
 			Scanner scan = new Scanner(file);
-			scan.useDelimiter(",");
-			//String line = scan.nextLine();
-			//Scanner br = new Scanner(line);
+			//scan.useDelimiter(",");
 			while(scan.hasNextLine()){
-				String name = scan.next();
-				//System.out.println(name);
-				String description = scan.next();
-				//System.out.println(description);
-				capacity = scan.nextInt();
-				//System.out.println(capacity);
-				enrollment = scan.nextInt();
-				//System.out.println(enrollment);
+				String line = scan.nextLine();
+				Scanner br = new Scanner(line);
+				br.useDelimiter(",");
+				String name = br.next();
+				String description = br.next();
+				capacity = br.nextInt();
+				enrollment = br.hasNext() ? br.nextInt() : 0;
 				Class cl = new Class(name,description,capacity,enrollment);
 				classes.add(cl);
+				br.close();
 			}
 			scan.close();
 			//br.close();
