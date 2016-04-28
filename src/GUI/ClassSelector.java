@@ -1,4 +1,4 @@
-package GUI;
+package src.GUI;
 import model.*;
 import java.lang.Class;
 
@@ -70,7 +70,7 @@ public class ClassSelector extends JDialog {
 				table = new javax.swing.JTable();
 				table.setAutoCreateRowSorter(true);
 				
-				table.setModel(new ClassTableModel());
+				table.setModel(classes==null ? new ClassTableModel() : new ClassTableModel(classes));
 				
 				scrollPane.setViewportView(table);
 			}

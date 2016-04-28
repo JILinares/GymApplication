@@ -1,4 +1,4 @@
-package GUI;
+package src.GUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,9 @@ public class ClassTableModel extends AbstractTableModel implements TableModelLis
 			
 		//}
 	}
+	
+	public ClassTableModel(ArrayList<Class> data){this.data = data; }
+	
 	//private static Object[][] dataSet = getValues();
 	
 	@Override
