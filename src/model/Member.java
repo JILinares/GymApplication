@@ -1,6 +1,6 @@
 //Jose Linares jlinare3@masonlive.gmu.edu G# G00855944
 
-package model;
+package src.model;
 
 import java.io.BufferedWriter;
 import java.util.regex.*;
@@ -70,6 +70,7 @@ public class Member {
 //		this.classes = classes;
 		//idArray[idCount] = this.id;
 		//idCount++;
+		this.classes = new ArrayList<model.Class>();
 	}
 	
 	//This constructor is used when reading file contents and creating a member from  those contents
@@ -88,6 +89,7 @@ public class Member {
 //		this.classes = classes;
 		//idArray[idCount] = this.id;
 		//idCount++;
+		this.classes = new ArrayList<model.Class>();
 		usedIds.add(id);
 	}
 
@@ -226,8 +228,22 @@ public class Member {
 		return classes;
 	}
 
+	//this is an n^2 operation, I suspect, sadly
 	public void setClasses(ArrayList<Class> classes) {
+		
+		for(Class c : classes) //if member was not yet enrolled, increment enrollment
+		if (!this.classes.contains(c))
+		{//c.setEnrollment(c.getEnrollment()-1);}
+			c.enrollMember(String.valueOf(this.getId()));
+		}
+		for(Class c : this.classes)//remove member from class he is no longer enrolled in
+		if(!classes.contains(c))
+		{
+			c.unenrollMember(String.valueOf(this.getId()));
+		}
+		
 		this.classes = classes;
+		
 	}
 	
 	//decrement old trainer and increment new trainer, if there is one
@@ -252,12 +268,12 @@ public class Member {
 		//return trainer.getEnrollment();
 	}
 	//Registers a member to a class. Increments the enrollment
-	public int register(Class cl){
-		int register = cl.getEnrollment();
-		cl.setEnrollment(register++);
-		return register;
-		
-	}
+//	public int register(Class cl){
+//		int register = cl.getEnrollment();
+//		cl.setEnrollment(register++);
+//		return register;
+//		
+//	}
 	
 	//Generates an ID. Checks into an array if the ID already exist. If so, a new ID is generated until one is available.
 	public int generateID(){

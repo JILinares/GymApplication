@@ -33,6 +33,7 @@ public class Class {
 		this.description = description;
 		this.capacity = capacity;
 		this.enrollment = enrollment;
+		members = new ArrayList<String>();
 		classCount++;
 	}
 	
@@ -70,18 +71,38 @@ public class Class {
 	public int getCapacity() {
 		return capacity;
 	}
-
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
+	
+	//adds a member
+	public boolean enrollMember(String memberID)
+	{	if(isFull()) {return false;} //business rule: cannot enroll in full class
+		if(members.contains(memberID)) {return false;} //sanity check for double enrollment
+		
+		members.add(memberID); 
+		enrollment++;
+		return true;
 	}
+	
+	//removes a member
+	public boolean unenrollMember(String memberID)
+	{	if(enrollment==0) return false;
+		if(!members.contains(memberID)) {return false;}
+		members.remove(memberID);
+		enrollment--;
+		return true;
+	}
+	
+	public boolean isFull(){return enrollment == capacity;}
+//	public void setCapacity(int capacity) {
+//		this.capacity = capacity;
+//	}
 
 	public int getEnrollment() {
 		return enrollment;
 	}
 
-	public void setEnrollment(int enrollment) {
-		this.enrollment = enrollment;
-	}
+//	public void setEnrollment(int enrollment) {
+//		this.enrollment = enrollment;
+//	}
 
 	public ArrayList<String> getMembers() {
 		return members;

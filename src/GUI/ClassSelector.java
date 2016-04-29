@@ -5,6 +5,7 @@ import java.lang.Class;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,15 +21,17 @@ public class ClassSelector extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private ArrayList<model.Class> classes;
+	private HashMap<String,Integer> resolve;
 	private Member member;
 	private JLabel lblSelectOneOr;
+	private ClassTableModel cm;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ClassSelector dialog = new ClassSelector();
+			ClassSelector dialog = new ClassSelector(null,null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -40,9 +43,16 @@ public class ClassSelector extends JDialog {
 	{	this();
 			this.member = member;
 			this.classes = classes;
-			//TODO: verify null
-			//TODO: append member full name to label
-			//TODO: put class fields in table
+			cm = classes==null ? new ClassTableModel() : new ClassTableModel(classes);
+			if (member != null) {
+				cm.readEnrollmentOfMember(member);
+				lblSelectOneOr.setText(
+						lblSelectOneOr.getText() + " " + member.getfName() + " " + member.getlName()
+						);}
+			
+			table.setModel(cm);
+			
+
 			//TODO: hashmap classnames to array indexes
 			
 	}
@@ -70,7 +80,7 @@ public class ClassSelector extends JDialog {
 				table = new javax.swing.JTable();
 				table.setAutoCreateRowSorter(true);
 				
-				table.setModel(classes==null ? new ClassTableModel() : new ClassTableModel(classes));
+				
 				
 				scrollPane.setViewportView(table);
 			}

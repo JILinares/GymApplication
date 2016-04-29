@@ -1,5 +1,5 @@
 //@Author Jonathan Eddy jeddy6@gmu.edu G00801804
-package GUI;
+package src.GUI;
 
 import java.awt.EventQueue;
 
