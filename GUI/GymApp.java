@@ -1,5 +1,5 @@
 //@Author Jonathan Eddy jeddy6@gmu.edu G00801804
-package src.GUI;
+package GUI;
 import model.*;
 
 import java.io.File;

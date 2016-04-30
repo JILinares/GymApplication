@@ -1,4 +1,4 @@
-package src.GUI;
+package GUI;
 import model.*;
 import java.lang.Class;
 

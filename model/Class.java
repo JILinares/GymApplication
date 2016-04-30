@@ -1,6 +1,6 @@
 //Jose Linares jlinare3@masonlive.gmu.edu G# G00855944
 
-package src.model;
+package model;
 
 import java.io.BufferedWriter;
 import java.io.File;
