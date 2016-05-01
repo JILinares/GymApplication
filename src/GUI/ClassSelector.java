@@ -15,17 +15,21 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ClassSelector extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private ArrayList<model.Class> classes;
-	private HashMap<String,Integer> resolve;
+	private ArrayList<model.Class> newEnroll; //contains changes in class list, if any
+//	private HashMap<String,Integer> resolve;
 	private Member member;
 	private JLabel lblSelectOneOr;
 	private ClassTableModel cm;
-
+	
+	public ArrayList<model.Class> getNewEnrollment() {return newEnroll;}
 	/**
 	 * Launch the application.
 	 */
@@ -51,8 +55,7 @@ public class ClassSelector extends JDialog {
 						);}
 			
 			table.setModel(cm);
-			
-
+	
 			//TODO: hashmap classnames to array indexes
 			
 	}
@@ -91,12 +94,24 @@ public class ClassSelector extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						newEnroll = cm.getNewEnrollment();
+						setVisible(false);
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						newEnroll = null;
+						setVisible(false);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

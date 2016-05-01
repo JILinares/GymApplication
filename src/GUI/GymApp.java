@@ -136,23 +136,26 @@ public class GymApp {
 	
 	//assign one or more classes
 	static boolean assignClass(HashMap<Integer,Member> members, ArrayList<model.Class> classes)
-	{	//TODO: assignClass dialog set
+	{	System.out.println("class path taken");
 		Member selected = selectMember(members);
-		//TODO: if null/cancel (left out for dummy demo purposes)
+		
 		ClassSelector ds = new ClassSelector(selected,classes);
+		
 		ds.setVisible(true);
 		ds.dispose();
 		
-		System.out.println("class path taken");
-		return false;
+		ArrayList<model.Class> ne = ds.getNewEnrollment(); //acquire changes 
+		if(ne!=null){selected.setClasses(ne); return true;} //submit changes, if any
+		else{return false;}
 	}
 	
+	//dialog to assign a trainer to a member
 	static boolean assignTrainer(HashMap<Integer,Member> members, HashMap<String,Trainer> trainers)
-	{	//TODO: assignTrainer dialog set
+	{	
 		System.out.println("trainer path taken");
 
 		Member m = selectMember(members);
-		//TODO: if m != null
+		if(m==null){return false;}
 		
 		//Set<String> keys = trainers.keySet();
 		String[] options = getTrainerOptions(trainers);

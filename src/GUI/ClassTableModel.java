@@ -43,7 +43,8 @@ public class ClassTableModel extends AbstractTableModel implements TableModelLis
 		ArrayList<Class> ne = new ArrayList<Class>();
 		for(int i = 0; i < checked.length; i++)
 		{
-			ne.add(data.get(i));
+			if(checked[i])
+				{ne.add(data.get(i));}
 		}
 		return ne;
 	}
