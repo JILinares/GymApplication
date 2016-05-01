@@ -1,6 +1,8 @@
 package GUI;
 
 
+import model.Member;
+import model.Trainer;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
@@ -18,6 +20,8 @@ import javax.swing.JOptionPane;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFormattedTextField;
 import java.awt.Component;
@@ -25,7 +29,7 @@ import javax.swing.JTextPane;
 import javax.swing.JTextField;
 import swing.FocusTraversalOnArray;
 
-import model.Member;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -77,7 +81,28 @@ public class InputMember extends JDialog {
 //		catch()
 //		
 		//TODO: resolve ID to name
-		registeredFor.setText(member.getTrainerID());
+		//registeredFor.setText(member.getTrainerID());
+	}
+	
+	//using the hashmap, gets trainer name, and reads out list of class names
+	private void readTrainerAndClasses(HashMap<String,Trainer> trainers)
+	{
+		String out="";
+		String id=member.getTrainerID();
+		if(id!=null && id.length() > 0)
+		{ 	Trainer t = trainers.get(id);			
+			out += String.format("trainer is %s %s\n", t.getfName(), t.getlName());
+		}
+		
+		ArrayList<model.Class> C = member.getClasses();
+		
+		if(C.size() > 0)
+		{
+			out +="enrolled in: ";
+			for(model.Class c:C)
+				{out+=c.getName() + " ";}
+		}
+		registeredFor.setText(out);
 	}
 	
 	private boolean writeFields()
@@ -147,9 +172,12 @@ public class InputMember extends JDialog {
 	
 		registeredFor.setVisible(true);
 		//TODO: add registered trainer and classes to textpane
-
 	}
 	
+	public InputMember(Member member,HashMap<String,Trainer> trainers, boolean readOnly)
+	{	this(member,readOnly);
+		this.readTrainerAndClasses(trainers);
+	}
 
 	
 

@@ -52,9 +52,9 @@ public class GymApp {
 					else	if("Class".equals(action))
 								{modified = assignClass(mH,cA);}
 					break;
-				case 'V':	viewMember(mH);
+				case 'V':	viewMember(mH,tH);
 					break;
-				case 'U':	modified = updateMember(mH);
+				case 'U':	modified = updateMember(mH,tH);
 					break;
 				case 'T': 	modified = assignTrainer(mH,tH);
 					break;
@@ -67,8 +67,8 @@ public class GymApp {
 		{	Member.writeFile(mH);	}
 	}
 
-	static void viewMember(HashMap<Integer,Member> members)
-	{	System.out.println("update path taken; " + members.size() + " members passed in");
+	static void viewMember(HashMap<Integer,Member> members,HashMap<String,Trainer> trainers)
+	{	System.out.println("view path taken; " + members.size() + " members passed in");
 		if(0==members.size())
 			{JOptionPane.showMessageDialog(
 					null, "No members to view", "Gym",
@@ -79,7 +79,7 @@ public class GymApp {
 		
 		//TODO: viewMemember dialog set, prompt for individual member
 		Member selected = selectMember(members);
-		InputMember im = new InputMember(selected,true);
+		InputMember im = new InputMember(selected,trainers,true);
 		im.setTitle("Gym: View Member");
 		im.setVisible(true);
 		im.dispose();
@@ -120,6 +120,27 @@ public class GymApp {
 		return false;
 	}
 	
+	//showing trainers and classes
+	static boolean updateMember(HashMap<Integer,Member> members, HashMap<String,Trainer> trainers)
+	{	
+		System.out.println("update path taken; " + members.size() + " members passed in");
+		//prompt for specific member
+		Member selected = selectMember(members);
+		
+		//TODO: update member if user did not cancel
+		if(null != selected){
+			InputMember im = new InputMember(selected,trainers,false);
+			im.setTitle("Gym: Update Member");
+			im.setVisible(true);
+			im.dispose();
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
 	//Select a trainer or return Null if canceled
 	/*ugly way of doing it; requires extracting key from string
 	 and recreates a list that does not change every function call*/
@@ -159,19 +180,26 @@ public class GymApp {
 		
 		//Set<String> keys = trainers.keySet();
 		String[] options = getTrainerOptions(trainers);
-		//TODO: remove "full" trainers from keyset
+		
 		
 		String selection = (String) JOptionPane.showInputDialog(null, "Select a Trainer:", "Gym",
 				JOptionPane.OK_OPTION | JOptionPane.QUESTION_MESSAGE, null, options, null);
 		// if user did not cancel
 		if (null==selection){return false;};
+		if (selection.equals("no trainer")){m.setTrainer(null, trainers); return true;}
 		
 		String id = selection.substring(0, selection.indexOf(' ', 0));
 		if(id==null){return false;}
 		
 		Trainer t = trainers.get(id);
 		if(t!=null)
-			{m.setTrainer(id,trainers); return true;}
+			{int resulting_id = m.setTrainer(id,trainers); 
+			 if(-1==resulting_id)
+			 {
+				 JOptionPane.showMessageDialog(null, "Trainer is completely booked!","Gym",JOptionPane.WARNING_MESSAGE);
+				 return (assignTrainer(members,trainers));
+			 }
+			return true;}
 		
 		return false;
 	}
@@ -181,7 +209,7 @@ public class GymApp {
 	*/
 	static String[] getTrainerOptions(HashMap<String,Trainer> map)
 	{
-		String[] retval = new String[map.size()];
+		String[] retval = new String[map.size()+1];
 		Set<Map.Entry<String, Trainer>> set = map.entrySet();
 		Iterator<Map.Entry<String, Trainer>> iterator = set.iterator();
 		
@@ -199,6 +227,8 @@ public class GymApp {
 					);
 			retval[i] = line.toString();
 		}
+		
+		retval[retval.length-1] = "no trainer";
 		
 		return retval;
 	}

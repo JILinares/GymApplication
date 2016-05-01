@@ -249,31 +249,20 @@ public class Member {
 	//decrement old trainer and increment new trainer, if there is one
 	//minor bug; avoided by GUI design: if new trainer does not exist or is full old trainer is still erased
 	public int setTrainer(String trainerID, HashMap<String,Trainer> trainers){
-		if(null != this.trainerID){
-			Trainer oldTrainer = trainers.get(this.trainerID);
-			if(null == oldTrainer){throw new IllegalArgumentException("bad trainer file?");}
-			oldTrainer.removeMember();
-		}
-		if(null == trainerID) return 0;
+		Trainer oldTrainer = trainers.get(this.trainerID);
+			if(null != oldTrainer)
+				{ oldTrainer.removeMember(); }
+		
+		if(null == trainerID){this.trainerID = null; return 0;}
 		
 		Trainer newTrainer = trainers.get(trainerID);
-		if(null == newTrainer) return -1;
-		if(newTrainer.isFull()) return 0;
+		if(null == newTrainer) { this.trainerID=null; return -1;}
+		if(newTrainer.isFull()) {return -1;}
 		newTrainer.addMember();
 		this.trainerID = trainerID;
 		return newTrainer.getEnrollment();
-		
-		//int enroll = trainer.getEnrollment();
-		//trainer.setEnrollment(enroll++);
-		//return trainer.getEnrollment();
 	}
-	//Registers a member to a class. Increments the enrollment
-//	public int register(Class cl){
-//		int register = cl.getEnrollment();
-//		cl.setEnrollment(register++);
-//		return register;
-//		
-//	}
+
 	
 	//Generates an ID. Checks into an array if the ID already exist. If so, a new ID is generated until one is available.
 	public int generateID(){
@@ -421,8 +410,8 @@ public class Member {
 	}
 		return id + ", " + fName + ", " + lName + ", " + email
 				+ ", " + phone + ", " + street + ", " + city + ", "
-				+ state + ", " + zip + 
-					((trainerID==null) ? "" :  ", " + trainerID) + ((classes==null) 
+				+ state + ", " + zip +  ", " +
+					((trainerID==null) ? "" :  trainerID) + ((classes==null) 
 							? "" : ", " + cString)/*" break "*/
 				/*+ cString*/;
 	}
